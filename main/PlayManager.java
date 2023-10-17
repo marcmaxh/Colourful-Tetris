@@ -1,7 +1,12 @@
 package main;
+
 import java.awt.*;
 import tetromino.*;
 
+/**
+ * Java class responsible for manageing the gameplay itself.
+ * Change if needed?
+ */
 public class PlayManager {
 
     // Main play area
@@ -17,26 +22,61 @@ public class PlayManager {
     final int tetrominoStartX;
     final int tetrominoStartY;
 
+    /**
+     * Constructor for the class PlayManager.
+     */
     public PlayManager() {
-        left_x = (GamePanel.width / 2) - (width / 2);
+        //Set playable board
+        left_x = (GamePanel.WIDTH / 2) - (width / 2);
         right_x = left_x + width;
         top_y = 50;
         bottom_y = top_y + height;
 
-        tetrominoStartX = left_x + (width / 2) - (Block.size);
-        tetrominoStartY = top_y + (Block.size);
+        tetrominoStartX = left_x + (width / 2) - (Block.SIZE);
+        tetrominoStartY = top_y + (Block.SIZE);
 
         // Set the starting Tetromino
-        currentTetromino = new TetrominoLR();
-        currentTetromino.SetXY(tetrominoStartX, tetrominoStartY);
+        //can be taken out to a generateTetromino() method later somewhere appropriate
+        switch (Shapes.pickTetrominoShape()){
+            case I:
+                currentTetromino = new TetrominoI();
+                break;
+            case J:
+                currentTetromino = new TetrominoJ();
+                break;
+            case L:
+                currentTetromino = new TetrominoL();
+                break;
+            case O:
+                currentTetromino = new TetrominoO();
+                break;
+            case S:
+                currentTetromino = new TetrominoS();
+                break;
+            case T:
+                currentTetromino = new TetrominoT();
+                break;
+            case Z:
+                currentTetromino = new TetrominoZ();
+                break;
+            default:
+                break;
+        }
+        currentTetromino.setXY(tetrominoStartX, tetrominoStartY);
     }
 
+    /**
+     * Updates the moving tetromino.
+     */
     public void update() {
-
 
         currentTetromino.update();
     }
 
+    /**
+     * Draws the inital frame at the start of a new game?
+     * Change if incorrect.
+     */
     public void draw(Graphics2D g2d) {
 
         // Draw the play area
@@ -49,13 +89,13 @@ public class PlayManager {
         int y = bottom_y - 200;
         g2d.drawRect(x, y, 200, 200);
         g2d.setFont(new Font("Arial", Font.PLAIN, 30));
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                             RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.drawString("Next", x + 60, y + 60);
 
         // Draw the current Tetromino
-        if(currentTetromino != null) {
+        if (currentTetromino != null) {
             currentTetromino.draw(g2d);
-
         }
 
     }
