@@ -29,5 +29,8 @@ public class Main {
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
+        // Launch the game
+        gamePanel.launchGame();
+
     }
 }
