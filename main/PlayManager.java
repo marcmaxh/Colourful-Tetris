@@ -41,7 +41,7 @@ public class PlayManager {
         tetrominoStartX = left_x + (width / 2) - (Block.SIZE);
         tetrominoStartY = top_y + (Block.SIZE);
 
-        currentTetromino = pickTetromino();
+        currentTetromino = new TetrominoS();
         currentTetromino.setXY(tetrominoStartX, tetrominoStartY);
     }
 
