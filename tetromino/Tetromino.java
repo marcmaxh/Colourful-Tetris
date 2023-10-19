@@ -73,7 +73,7 @@ public abstract class Tetromino {
      * Checks for collision with the left, right and bottom boundaries of the game board.
      * Sets the corresponding collision flags if a collision is detected.
      */
-    public void checkMovementCollision() {
+    public void checkCollision() {
         leftCollision = false;
         rightCollision = false;
         bottomCollision = false;
@@ -101,9 +101,41 @@ public abstract class Tetromino {
 
     }
 
-    public void checkRotationCollision() {
+    /**
+     * Checks for collision after rotating the tetromino.
+     * Sets the rightCollision, leftCollision and bottomCollision flags accordingly.
+     */
+    // public void checkRotationCollision() {
+    //     rightCollision = false;
+    //     leftCollision = false;
+    //     bottomCollision = false;
 
-    }
+    //     // rotate the tetromino
+    //     rotate(Direction.ROTATE);
+
+
+    //     // check for right collision
+    //     for (int i = 0; i < b.length; i++) {
+    //         if (tempB[i].getBlockX() + Block.SIZE > PlayManager.right_x) {
+    //             rightCollision = true;
+    //         }  
+    //     }
+
+    //     // check for left collision
+    //     for (int i = 0; i < b.length; i++) {
+    //         if (b[i].getBlockX() < PlayManager.left_x) {
+    //             leftCollision = true;
+    //         }
+    //     }
+
+    //     // check for bottom collision
+    //     for (int i = 0; i < b.length; i++) {
+    //         if (b[i].getBlockY() + Block.SIZE > PlayManager.bottom_y) {
+    //             bottomCollision = true;
+    //         }
+    //     }
+
+    // }
 
 
     /**
@@ -112,8 +144,8 @@ public abstract class Tetromino {
      * Also handles rotation of the tetromino.
      */
     public void update() {
-
-        checkMovementCollision();
+        rotate(Direction.ROTATE);
+        checkCollision();
 
         // move the tetromino down
         if (KeyHandler.downPressed) {
@@ -151,9 +183,16 @@ public abstract class Tetromino {
             KeyHandler.rightPressed = false;
         }
 
+        rotate(Direction.ROTATE);
+        checkCollision();
+
         // rotate the tetromino
         if (KeyHandler.rotatePressed) {
-            updateXY(Direction.ROTATE);
+
+            // If the tetromino is not hitting anything, it can rotate.
+            if (!leftCollision && !rightCollision && !bottomCollision) {
+                updateXY(Direction.ROTATE);
+            }
 
             KeyHandler.rotatePressed = false;
         }

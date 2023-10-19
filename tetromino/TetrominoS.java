@@ -52,9 +52,6 @@ public class TetrominoS extends Tetromino {
             b[3].setBlockX(b[0].getBlockX() - Block.SIZE);
             b[3].setBlockY(b[0].getBlockY());
 
-            System.out.println("S tetromino rotated 0");
-
-
         } else {
 
             // Shape numbering:
@@ -62,9 +59,7 @@ public class TetrominoS extends Tetromino {
             // * b[3]
             // + * b[0], b[1]
             //   * b[2]
-
-            System.out.println(b[0].getBlockX() + " " + b[2].getBlockX());
-
+            
             b[1].setBlockX(b[0].getBlockX() + Block.SIZE);
             b[1].setBlockY(b[0].getBlockY());
 
