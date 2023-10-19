@@ -69,6 +69,10 @@ public abstract class Tetromino {
     // method responsible for the unique rotation of each shape
     public abstract void rotate(Direction direction);
 
+    /**
+     * Checks for collision with the left, right and bottom boundaries of the game board.
+     * Sets the corresponding collision flags if a collision is detected.
+     */
     public void checkMovementCollision() {
         leftCollision = false;
         rightCollision = false;
@@ -101,8 +105,12 @@ public abstract class Tetromino {
 
     }
 
-    // Is this method sopposed to make the changes visible all at once
-    // in order to avoid wonky movement on the diplay?
+
+    /**
+     * Updates the position of the tetromino based on user input and automatic downward movement.
+     * Checks for collisions with the game board and prevents movement if a collision is detected.
+     * Also handles rotation of the tetromino.
+     */
     public void update() {
 
         checkMovementCollision();
