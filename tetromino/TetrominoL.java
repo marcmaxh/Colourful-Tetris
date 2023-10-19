@@ -29,24 +29,23 @@ public class TetrominoL extends Tetromino {
         b[0].setBlockY(y);;
 
         b[1].setBlockX(x);
-        b[1].setBlockY(y + Block.SIZE);
+        b[1].setBlockY(y - Block.SIZE);
 
         b[2].setBlockX(x);
-        b[2].setBlockY(y - Block.SIZE);
+        b[2].setBlockY(y + Block.SIZE);
 
         b[3].setBlockX(x + Block.SIZE);
-        b[3].setBlockY(y - Block.SIZE);
+        b[3].setBlockY(y + Block.SIZE);
+
+        System.out.println("L tetromino created");
     }
 
     @Override
     public void rotate(Direction direction) {
 
         switch (direction) {
-            case RIGHTROTATE:
+            case ROTATE:
                 //rotate right
-                break;
-            case LEFTROTATE:
-                //rotate left
                 break;
             default:
                 break;
