@@ -20,8 +20,9 @@ public class Block extends Rectangle {
      * Draws the block on the game display.
      */
     public void draw(Graphics2D g2d) {
+        int margin = 2;
         g2d.setColor(color);
-        g2d.fillRect(x, y, SIZE, SIZE);
+        g2d.fillRect(x + margin, y + margin, SIZE - (margin * 2), SIZE - (margin * 2));
     }
 
     public int getBlockX() {

@@ -34,31 +34,23 @@ public class TetrominoJ extends Tetromino {
     }
 
     @Override
-    public void rotate(Direction direction) {
-        switch (direction) {
-            case ROTATE:
-                // rotate the tetromino 90 degrees right around the guide block
-                //Shape numbering:
-                //Guide block: +
-                // * b[3]
-                // *+* b[2], b[0], b[1]
-                b[0].setBlockX(b[0].getBlockX() + Block.SIZE);
-                b[0].setBlockY(b[0].getBlockY());
+    public void rotate() {
+        // rotate the tetromino 90 degrees right around the guide block
+        //Shape numbering:
+        //Guide block: +
+        // * b[3]
+        // *+* b[2], b[0], b[1]
+        b[0].setBlockX(b[0].getBlockX() + Block.SIZE);
+        b[0].setBlockY(b[0].getBlockY());
 
-                b[1].setBlockX(b[1].getBlockX() + (2 * Block.SIZE));
-                b[1].setBlockY(b[1].getBlockY() + (2 * Block.SIZE));
+        b[1].setBlockX(b[1].getBlockX() + (2 * Block.SIZE));
+        b[1].setBlockY(b[1].getBlockY() + (2 * Block.SIZE));
 
-                b[2].setBlockX(b[2].getBlockX() - Block.SIZE);
-                b[2].setBlockY(b[2].getBlockY() - Block.SIZE);
+        b[2].setBlockX(b[2].getBlockX() - Block.SIZE);
+        b[2].setBlockY(b[2].getBlockY() - Block.SIZE);
 
-                b[3].setBlockX(b[3].getBlockX());
-                b[3].setBlockY(b[3].getBlockY() - (2 * Block.SIZE));
-
-
-                break;
-            default:
-                break;
-        }
+        b[3].setBlockX(b[3].getBlockX());
+        b[3].setBlockY(b[3].getBlockY() - (2 * Block.SIZE));
     }
     
 }

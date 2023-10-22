@@ -33,13 +33,7 @@ public class TetrominoT extends Tetromino {
     }
 
     @Override
-    public void rotate(Direction direction) {
-        switch (direction) {
-            case ROTATE:
-                //rotate right
-                break;
-            default:
-                break;
-        }
+    public void rotate() {
+
     }
 }
