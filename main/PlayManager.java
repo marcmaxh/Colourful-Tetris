@@ -41,7 +41,7 @@ public class PlayManager {
         tetrominoStartX = left_x + (width / 2) - (Block.SIZE);
         tetrominoStartY = top_y + (Block.SIZE);
 
-        currentTetromino = pickTetromino();
+        currentTetromino = new TetrominoS();
         currentTetromino.setXY(tetrominoStartX, tetrominoStartY);
     }
 
@@ -106,6 +106,14 @@ public class PlayManager {
         // Draw the current Tetromino
         if (currentTetromino != null) {
             currentTetromino.draw(g2d);
+        }
+
+        // Draw Pause menu
+
+        g2d.setColor(Color.white);
+        g2d.setFont(g2d.getFont().deriveFont(50f));
+        if (KeyHandler.pausePressed) {
+            g2d.drawString("PAUSED", left_x + 70, top_y + 300);
         }
 
     }

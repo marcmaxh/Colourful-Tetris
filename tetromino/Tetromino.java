@@ -44,25 +44,30 @@ public abstract class Tetromino {
 
         checkRotationCollision();
 
-        switch (direction) {
-            case DOWN:
-                for (int i = 0; i < 4; i++) {
-                    b[i].setBlockY(b[i].getBlockY() + Block.SIZE);
-                }
-                break;
-            case RIGHTMOVE:
-                for (int i = 0; i < 4; i++) {
-                    b[i].setBlockX(b[i].getBlockX() + Block.SIZE);
-                }
-                break;
-            case LEFTMOVE:
-                for (int i = 0; i < 4; i++) {
-                    b[i].setBlockX(b[i].getBlockX() - Block.SIZE);
-                }
-                break;
-            default:
-                rotate(direction);
-                break;
+        if (!leftCollision && !rightCollision && !bottomCollision) {
+            switch (direction) {
+                case DOWN:
+                    for (int i = 0; i < 4; i++) {
+                        b[i].setBlockY(b[i].getBlockY() + Block.SIZE);
+                    }
+                    break;
+                case RIGHTMOVE:
+                    for (int i = 0; i < 4; i++) {
+                        b[i].setBlockX(b[i].getBlockX() + Block.SIZE);
+                    }
+                    break;
+                case LEFTMOVE:
+                    for (int i = 0; i < 4; i++) {
+                        b[i].setBlockX(b[i].getBlockX() - Block.SIZE);
+                    }
+                    break;
+                default:
+                    for (int i = 0; i < 4; i++) {
+                        b[i].setBlockX(tempB[i].getBlockX());
+                        b[i].setBlockY(tempB[i].getBlockY());
+                    }
+                    break;
+            }
         }
     }
 
@@ -70,17 +75,18 @@ public abstract class Tetromino {
     public abstract void rotate(Direction direction);
 
     /**
-     * Checks for collision with the left, right and bottom boundaries of the game board.
+     * Checks for collision with the left, right and bottom boundaries of the game
+     * board.
      * Sets the corresponding collision flags if a collision is detected.
      */
-    public void checkCollision() {
+    public void checkMovementCollision() {
         leftCollision = false;
         rightCollision = false;
         bottomCollision = false;
 
         // check for left collision
         for (int i = 0; i < b.length; i++) {
-            if (b[i].getBlockX() <= PlayManager.left_x) {
+            if (b[i].getBlockX() == PlayManager.left_x) {
                 leftCollision = true;
             }
         }
@@ -101,51 +107,43 @@ public abstract class Tetromino {
 
     }
 
-    /**
-     * Checks for collision after rotating the tetromino.
-     * Sets the rightCollision, leftCollision and bottomCollision flags accordingly.
-     */
-    // public void checkRotationCollision() {
-    //     rightCollision = false;
-    //     leftCollision = false;
-    //     bottomCollision = false;
+    public void checkRotationCollision() {
+        leftCollision = false;
+        rightCollision = false;
+        bottomCollision = false;
 
-    //     // rotate the tetromino
-    //     rotate(Direction.ROTATE);
+        // check for left collision
+        for (int i = 0; i < b.length; i++) {
+            if (tempB[i].getBlockX() < PlayManager.left_x) {
+                leftCollision = true;
+            }
+        }
 
+        // check for right collision
+        for (int i = 0; i < b.length; i++) {
+            if (tempB[i].getBlockX() + Block.SIZE > PlayManager.right_x) {
+                rightCollision = true;
+            }
+        }
 
-    //     // check for right collision
-    //     for (int i = 0; i < b.length; i++) {
-    //         if (tempB[i].getBlockX() + Block.SIZE > PlayManager.right_x) {
-    //             rightCollision = true;
-    //         }  
-    //     }
-
-    //     // check for left collision
-    //     for (int i = 0; i < b.length; i++) {
-    //         if (b[i].getBlockX() < PlayManager.left_x) {
-    //             leftCollision = true;
-    //         }
-    //     }
-
-    //     // check for bottom collision
-    //     for (int i = 0; i < b.length; i++) {
-    //         if (b[i].getBlockY() + Block.SIZE > PlayManager.bottom_y) {
-    //             bottomCollision = true;
-    //         }
-    //     }
-
-    // }
-
+        // check for bottom collision
+        for (int i = 0; i < b.length; i++) {
+            if (tempB[i].getBlockY() + Block.SIZE > PlayManager.bottom_y) {
+                bottomCollision = true;
+            }
+        }
+    }
 
     /**
-     * Updates the position of the tetromino based on user input and automatic downward movement.
-     * Checks for collisions with the game board and prevents movement if a collision is detected.
+     * Updates the position of the tetromino based on user input and automatic
+     * downward movement.
+     * Checks for collisions with the game board and prevents movement if a
+     * collision is detected.
      * Also handles rotation of the tetromino.
      */
     public void update() {
-        rotate(Direction.ROTATE);
-        checkCollision();
+
+        checkMovementCollision();
 
         // move the tetromino down
         if (KeyHandler.downPressed) {
@@ -183,19 +181,20 @@ public abstract class Tetromino {
             KeyHandler.rightPressed = false;
         }
 
-        rotate(Direction.ROTATE);
-        checkCollision();
+        checkRotationCollision();
 
         // rotate the tetromino
         if (KeyHandler.rotatePressed) {
 
             // If the tetromino is not hitting anything, it can rotate.
             if (!leftCollision && !rightCollision && !bottomCollision) {
-                updateXY(Direction.ROTATE);
+                rotate(Direction.ROTATE);
             }
 
             KeyHandler.rotatePressed = false;
         }
+
+        // move the tetromino down automatically
 
         autoDropCounter++;
         if (autoDropCounter == PlayManager.dropInterval && !bottomCollision) {

@@ -43,14 +43,17 @@ public class TetrominoS extends Tetromino {
             //   * * b[1], b[2]
             // * + b[3], b[0]
 
-            b[1].setBlockX(b[0].getBlockX());
-            b[1].setBlockY(b[0].getBlockY() - Block.SIZE);
+            tempB[0].setBlockX(b[0].getBlockX());
+            tempB[0].setBlockY(b[0].getBlockY());
 
-            b[2].setBlockX(b[0].getBlockX() + Block.SIZE);
-            b[2].setBlockY(b[0].getBlockY() - Block.SIZE);
+            tempB[1].setBlockX(b[0].getBlockX());
+            tempB[1].setBlockY(b[0].getBlockY() - Block.SIZE);
 
-            b[3].setBlockX(b[0].getBlockX() - Block.SIZE);
-            b[3].setBlockY(b[0].getBlockY());
+            tempB[2].setBlockX(b[0].getBlockX() + Block.SIZE);
+            tempB[2].setBlockY(b[0].getBlockY() - Block.SIZE);
+
+            tempB[3].setBlockX(b[0].getBlockX() - Block.SIZE);
+            tempB[3].setBlockY(b[0].getBlockY());
 
         } else {
 
@@ -59,17 +62,21 @@ public class TetrominoS extends Tetromino {
             // * b[3]
             // + * b[0], b[1]
             //   * b[2]
+
+            tempB[0].setBlockX(b[0].getBlockX());
+            tempB[0].setBlockY(b[0].getBlockY());
             
-            b[1].setBlockX(b[0].getBlockX() + Block.SIZE);
-            b[1].setBlockY(b[0].getBlockY());
+            tempB[1].setBlockX(b[0].getBlockX() + Block.SIZE);
+            tempB[1].setBlockY(b[0].getBlockY());
 
-            b[2].setBlockX(b[0].getBlockX() + Block.SIZE);
-            b[2].setBlockY(b[0].getBlockY() + Block.SIZE);
+            tempB[2].setBlockX(b[0].getBlockX() + Block.SIZE);
+            tempB[2].setBlockY(b[0].getBlockY() + Block.SIZE);
 
-            b[3].setBlockX(b[0].getBlockX());
-            b[3].setBlockY(b[0].getBlockY() - Block.SIZE);
+            tempB[3].setBlockX(b[0].getBlockX());
+            tempB[3].setBlockY(b[0].getBlockY() - Block.SIZE);
             
         }
+        updateXY(direction);
     }
 
 }
