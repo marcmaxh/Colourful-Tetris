@@ -4,10 +4,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Window;
-import java.io.File;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,26 +19,13 @@ import javax.swing.*;
  */
 public class HomeScreen extends JPanel {
 
-    //should be responsible for the background image
-    //doesn't work
-    @Override
-    protected void paintComponent(Graphics g) {
-        Image background;
-        try {
-            background = ImageIO.read(new File("/images/TetrisHomeBackground.jpeg"));
-            super.paintComponent(g);
-            g.drawImage(background, 0, 0, null);
-        } catch (IOException e) {
-            System.out.println("The image is crashing something!!!");
-        }
-    }
-
     //window size
-    public static final int WIDTH = 1280;
-    public static final int HEIGHT = 720;
+    public static final int WIDTH = 720;
+    public static final int HEIGHT = 750;
 
     //layout
-    GridLayout layout = new GridLayout(3, 1, 50, 30);
+    GridBagLayout layout = new GridBagLayout();
+    GridBagConstraints c = new GridBagConstraints();
 
     //buttons
     JButton start = new JButton("START GAME");
@@ -51,12 +40,27 @@ public class HomeScreen extends JPanel {
         this.setBackground(Color.black);
         this.setLayout(layout);
 
+        //setting background
+        try {
+            this.setBackground(ImageIO.read(
+                getClass().getResource(".\\images\\TetrisHomeBackground.jpeg")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //managing layout
+        c.insets = new Insets(2, 2, 2, 2);
+        c.gridx = 0;
+        c.gridy = 0;
+        c.ipadx = 15;
+        c.ipady = 10;
+        
+        //adding the buttons
         start.setFont(new Font("Monospaced", Font.BOLD, 25));
         start.setForeground(Color.WHITE);
         start.setBorder(BorderFactory.createEtchedBorder(10, Color.WHITE, Color.WHITE));
         start.setBackground(Color.BLACK);
-        start.setSize(50, 50);
-        this.add(start);
+        this.add(start, c);
         start.addActionListener((l) -> {
             //start a new game
             Window window = SwingUtilities.getWindowAncestor(this);
@@ -67,12 +71,13 @@ public class HomeScreen extends JPanel {
             gamePanel.launchGame();
         });
         
+        c.gridy = 1;
+        c.ipadx = 45;
         settings.setFont(new Font("Monospaced", Font.BOLD, 25));
         settings.setForeground(Color.WHITE);
         settings.setBorder(BorderFactory.createEtchedBorder(10, Color.WHITE, Color.WHITE));
         settings.setBackground(Color.BLACK);
-        settings.setSize(50, 50);
-        this.add(settings);
+        this.add(settings, c);
         settings.addActionListener((l) -> {
             //open settings panel
             Window window = SwingUtilities.getWindowAncestor(this);
@@ -82,16 +87,39 @@ public class HomeScreen extends JPanel {
             window.pack();
         });
 
+        c.gridy = 2;
+        c.ipadx = 105;
         quit.setFont(new Font("Monospaced", Font.BOLD, 25));
         quit.setForeground(Color.WHITE);
         quit.setBorder(BorderFactory.createEtchedBorder(10, Color.WHITE, Color.WHITE));
         quit.setBackground(Color.BLACK);
-        quit.setPreferredSize(new Dimension(50, 50));
-        this.add(quit);
+        this.add(quit, c);
         quit.addActionListener((l) -> {
             //close the program
             SwingUtilities.getWindowAncestor(this).dispose();     
         });
     }
+    
+    //image management
+    private BufferedImage img;
 
+    /**
+     * Sets the background of the panel.
+     */
+    public void setBackground(BufferedImage value) {
+        if (value != img) {
+            this.img = value;
+            repaint();
+        }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (img != null) {
+            int x = (getWidth() - img.getWidth()) / 2;
+            int y = (getHeight() - img.getHeight()) / 2;
+            g.drawImage(img, x, y, this);
+        }
+    }
 }
