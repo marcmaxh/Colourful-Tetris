@@ -33,7 +33,7 @@ public class TetrominoS extends Tetromino {
     }
 
     @Override
-    public void rotate(Direction direction) {
+    public void rotate() {
         // if the tetromino is vertical, make it horizontal
         // and vice versa
         if (b[0].getBlockX() != b[1].getBlockX()) {
@@ -76,7 +76,7 @@ public class TetrominoS extends Tetromino {
             tempB[3].setBlockY(b[0].getBlockY() - Block.SIZE);
             
         }
-        updateXY(direction);
+        updateXY(Direction.ROTATE);
     }
 
 }

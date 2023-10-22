@@ -37,19 +37,11 @@ public class TetrominoL extends Tetromino {
         b[3].setBlockX(x + Block.SIZE);
         b[3].setBlockY(y + Block.SIZE);
 
-        System.out.println("L tetromino created");
     }
 
     @Override
-    public void rotate(Direction direction) {
+    public void rotate() {
 
-        switch (direction) {
-            case ROTATE:
-                //rotate right
-                break;
-            default:
-                break;
-        }
     }
 
 }

@@ -44,35 +44,35 @@ public abstract class Tetromino {
 
         checkRotationCollision();
 
-        if (!leftCollision && !rightCollision && !bottomCollision) {
-            switch (direction) {
-                case DOWN:
-                    for (int i = 0; i < 4; i++) {
-                        b[i].setBlockY(b[i].getBlockY() + Block.SIZE);
-                    }
-                    break;
-                case RIGHTMOVE:
-                    for (int i = 0; i < 4; i++) {
-                        b[i].setBlockX(b[i].getBlockX() + Block.SIZE);
-                    }
-                    break;
-                case LEFTMOVE:
-                    for (int i = 0; i < 4; i++) {
-                        b[i].setBlockX(b[i].getBlockX() - Block.SIZE);
-                    }
-                    break;
-                default:
+        switch (direction) {
+            case DOWN:
+                for (int i = 0; i < 4; i++) {
+                    b[i].setBlockY(b[i].getBlockY() + Block.SIZE);
+                }
+                break;
+            case RIGHTMOVE:
+                for (int i = 0; i < 4; i++) {
+                    b[i].setBlockX(b[i].getBlockX() + Block.SIZE);
+                }
+                break;
+            case LEFTMOVE:
+                for (int i = 0; i < 4; i++) {
+                    b[i].setBlockX(b[i].getBlockX() - Block.SIZE);
+                }
+                break;
+            default:
+                if (!leftCollision && !rightCollision && !bottomCollision) {
                     for (int i = 0; i < 4; i++) {
                         b[i].setBlockX(tempB[i].getBlockX());
                         b[i].setBlockY(tempB[i].getBlockY());
                     }
-                    break;
-            }
+                }
+                break;
         }
     }
 
     // method responsible for the unique rotation of each shape
-    public abstract void rotate(Direction direction);
+    public abstract void rotate();
 
     /**
      * Checks for collision with the left, right and bottom boundaries of the game
@@ -107,6 +107,10 @@ public abstract class Tetromino {
 
     }
 
+    /**
+     * Checks for collision after rotation of the tetromino.
+     * Sets the leftCollision, rightCollision and bottomCollision flags accordingly.
+     */
     public void checkRotationCollision() {
         leftCollision = false;
         rightCollision = false;
@@ -181,15 +185,10 @@ public abstract class Tetromino {
             KeyHandler.rightPressed = false;
         }
 
-        checkRotationCollision();
-
         // rotate the tetromino
         if (KeyHandler.rotatePressed) {
 
-            // If the tetromino is not hitting anything, it can rotate.
-            if (!leftCollision && !rightCollision && !bottomCollision) {
-                rotate(Direction.ROTATE);
-            }
+            rotate();
 
             KeyHandler.rotatePressed = false;
         }
