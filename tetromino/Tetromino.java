@@ -15,6 +15,9 @@ public abstract class Tetromino {
     boolean leftCollision;
     boolean rightCollision;
     boolean bottomCollision;
+    public boolean active = true;
+    public boolean deactivating;
+    int deactiveCounter = 0;
 
     /**
      * Creates a new tetromino with a set colour.
@@ -84,6 +87,9 @@ public abstract class Tetromino {
         rightCollision = false;
         bottomCollision = false;
 
+        // check for collision with static blocks
+        checkStaticBlockCollision();
+
         // check for left collision
         for (int i = 0; i < b.length; i++) {
             if (b[i].getBlockX() == PlayManager.left_x) {
@@ -116,6 +122,9 @@ public abstract class Tetromino {
         rightCollision = false;
         bottomCollision = false;
 
+        // check for collision with static blocks
+        checkStaticBlockCollision();
+
         // check for left collision
         for (int i = 0; i < b.length; i++) {
             if (tempB[i].getBlockX() < PlayManager.left_x) {
@@ -138,6 +147,37 @@ public abstract class Tetromino {
         }
     }
 
+    private void checkStaticBlockCollision() {
+
+        // check for collision with static blocks
+        for (int i = 0; i < PlayManager.staticBlocks.size(); i++) {
+
+            // check for bottom collision
+            for (int j = 0; j < b.length; j++) {
+                if (b[j].getBlockX() == (PlayManager.staticBlocks.get(i).getBlockX())
+                        && b[j].getBlockY() + Block.SIZE == (PlayManager.staticBlocks.get(i).getBlockY())) {
+                    bottomCollision = true;
+                }
+            }
+
+            // check for left collision
+            for (int j = 0; j < b.length; j++) {
+                if (b[j].getBlockX() == (PlayManager.staticBlocks.get(i).getBlockX() + Block.SIZE)
+                        && b[j].getBlockY() == (PlayManager.staticBlocks.get(i).getBlockY())) {
+                    leftCollision = true;
+                }
+            }
+
+            // check for right collision
+            for (int j = 0; j < b.length; j++) {
+                if (b[j].getBlockX() == (PlayManager.staticBlocks.get(i).getBlockX() - Block.SIZE)
+                        && b[j].getBlockY() == (PlayManager.staticBlocks.get(i).getBlockY())) {
+                    rightCollision = true;
+                }
+            }
+        }
+    }
+
     /**
      * Updates the position of the tetromino based on user input and automatic
      * downward movement.
@@ -146,6 +186,10 @@ public abstract class Tetromino {
      * Also handles rotation of the tetromino.
      */
     public void update() {
+
+        if (deactivating) {
+            deactivating();
+        }
 
         checkMovementCollision();
 
@@ -195,12 +239,39 @@ public abstract class Tetromino {
 
         // move the tetromino down automatically
 
-        autoDropCounter++;
-        if (autoDropCounter == PlayManager.dropInterval && !bottomCollision) {
-            updateXY(Direction.DOWN);
+        if (bottomCollision) {
+            deactivating = true;
+        } else {
+            autoDropCounter++;
+            if (autoDropCounter == PlayManager.dropInterval && !bottomCollision) {
+                updateXY(Direction.DOWN);
 
-            autoDropCounter = 0;
+                autoDropCounter = 0;
+            }
         }
+
+    }
+
+    private void deactivating() {
+
+        deactiveCounter++;
+
+        // wait for 45 frames before deactivating the tetromino
+        if (deactiveCounter == 45) {
+
+            checkMovementCollision();
+
+            // if the Tetromino is still hitting something afte 45 frames, deactivate it
+            if (bottomCollision) {
+                active = false;
+            }
+
+            // reset the deactivating flag and counter if the tetromino is not hitting
+            // anything anymore (it can keep moving down)
+            deactivating = false;
+            deactiveCounter = 0;
+        }
+
     }
 
     /**
