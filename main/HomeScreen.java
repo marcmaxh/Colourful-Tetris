@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Window;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -58,6 +59,12 @@ public class HomeScreen extends JPanel {
         this.add(start);
         start.addActionListener((l) -> {
             //start a new game
+            Window window = SwingUtilities.getWindowAncestor(this);
+            window.remove(this);
+            GamePanel gamePanel = new GamePanel();
+            window.add(gamePanel);
+            window.pack();
+            gamePanel.launchGame();
         });
         
         settings.setFont(new Font("Monospaced", Font.BOLD, 25));
@@ -68,6 +75,11 @@ public class HomeScreen extends JPanel {
         this.add(settings);
         settings.addActionListener((l) -> {
             //open settings panel
+            Window window = SwingUtilities.getWindowAncestor(this);
+            window.remove(this);
+            SettingsPanel settingsPanel = new SettingsPanel();
+            window.add(settingsPanel);
+            window.pack();
         });
 
         quit.setFont(new Font("Monospaced", Font.BOLD, 25));
@@ -78,7 +90,7 @@ public class HomeScreen extends JPanel {
         this.add(quit);
         quit.addActionListener((l) -> {
             //close the program
-            
+            SwingUtilities.getWindowAncestor(this).dispose();     
         });
     }
 

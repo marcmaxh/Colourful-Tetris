@@ -2,6 +2,7 @@ package main;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 
 import javax.swing.JButton;
@@ -18,7 +19,7 @@ public class SettingsPanel extends JPanel {
     public static final int HEIGHT = 720;
 
     //layout
-    GridLayout layout = new GridLayout(5, 5, 20, 20);
+    GridBagLayout layout = new GridBagLayout();
 
     //labels
     JLabel speed = new JLabel("SPEED");
