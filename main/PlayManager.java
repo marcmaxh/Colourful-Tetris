@@ -169,7 +169,7 @@ public class PlayManager {
         g2d.setColor(Color.white);
         g2d.setFont(g2d.getFont().deriveFont(50f));
         if (KeyHandler.pausePressed) {
-            g2d.drawString("PAUSED", left_x + 70, top_y + 300);
+            g2d.drawString("PAUSED", left_x + 85, top_y + 300);
         }
 
     }
