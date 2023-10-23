@@ -14,23 +14,13 @@ public class Main {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
 
-        // Add GamePanel to window
-        //Should be removed to add a home screen after implementation
-        GamePanel gamePanel = new GamePanel();
-        window.add(gamePanel);
-        window.pack();
-
         //Adding home screen to window
-        // HomeScreen homeScreen = new HomeScreen();
-        // window.add(homeScreen);
-        // window.pack();
+        HomeScreen homeScreen = new HomeScreen();
+        window.add(homeScreen);
+        window.pack();
         
         //Displays the game on the monitor
         window.setLocationRelativeTo(null);
         window.setVisible(true);
-
-        // Launch the game
-        gamePanel.launchGame();
-
     }
 }
