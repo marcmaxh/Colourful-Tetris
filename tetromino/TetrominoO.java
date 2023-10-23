@@ -33,8 +33,8 @@ public class TetrominoO extends Tetromino {
     }
 
     @Override
-    public void rotate(Direction direction) {
-        return;
+    public void rotate() {
+        // do nothing since square can't rotate
     }
     
 }
