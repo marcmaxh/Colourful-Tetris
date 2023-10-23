@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.*;
+import java.util.*;
 import tetromino.*;
 
 /**
@@ -22,8 +23,13 @@ public class PlayManager {
     final int tetrominoStartX;
     final int tetrominoStartY;
 
+    // Others
+    public static int dropInterval = 60; // 60 frames per second = 1 second
+
+
     /**
-     * Constructor for the class PlayManager.
+     * Constructor for PlayManager class.
+     * Initializes the playable board and sets the starting position of the current tetromino.
      */
     public PlayManager() {
         //Set playable board
@@ -35,34 +41,38 @@ public class PlayManager {
         tetrominoStartX = left_x + (width / 2) - (Block.SIZE);
         tetrominoStartY = top_y + (Block.SIZE);
 
-        // Set the starting Tetromino
-        //can be taken out to a generateTetromino() method later somewhere appropriate
-        switch (Shapes.pickTetrominoShape()){
-            case I:
-                currentTetromino = new TetrominoI();
-                break;
-            case J:
-                currentTetromino = new TetrominoJ();
-                break;
-            case L:
-                currentTetromino = new TetrominoL();
-                break;
-            case O:
-                currentTetromino = new TetrominoO();
-                break;
-            case S:
-                currentTetromino = new TetrominoS();
-                break;
-            case T:
-                currentTetromino = new TetrominoT();
-                break;
-            case Z:
-                currentTetromino = new TetrominoZ();
-                break;
-            default:
-                break;
-        }
+        currentTetromino = pickTetromino();
         currentTetromino.setXY(tetrominoStartX, tetrominoStartY);
+    }
+
+    /**
+     * Picks a random Tetromino shape to be used in the game.
+     *
+     * @return a Tetromino object representing the chosen shape.
+     */
+    private Tetromino pickTetromino() {
+
+        // Pick a Random Tetromino
+        int randNo = new Random().nextInt(7);
+
+        switch (randNo) {
+            case 0:
+                return new TetrominoI();
+            case 1:
+                return new TetrominoJ();
+            case 2: 
+                return new TetrominoL();
+            case 3: 
+                return new TetrominoO();
+            case 4:
+                return new TetrominoS();
+            case 5:
+                return new TetrominoT();
+            case 6: 
+                return new TetrominoZ();
+            default:
+                return null;
+        }
     }
 
     /**
@@ -88,7 +98,7 @@ public class PlayManager {
         int x = right_x + 100;
         int y = bottom_y - 200;
         g2d.drawRect(x, y, 200, 200);
-        g2d.setFont(new Font("Arial", Font.PLAIN, 30));
+        g2d.setFont(new Font("Monospaced", Font.PLAIN, 30));
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                              RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.drawString("Next", x + 60, y + 60);

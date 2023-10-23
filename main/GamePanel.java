@@ -9,8 +9,8 @@ import javax.swing.*;
  * Is that correct?
  */
 public class GamePanel extends JPanel implements Runnable {
-    public static final int WIDTH = 1280;
-    public static final int HEIGHT = 720;
+    public static final int WIDTH = 1000;
+    public static final int HEIGHT = 750;
     final int fps = 60;
     Thread gameThread;
     PlayManager playManager;
@@ -23,6 +23,10 @@ public class GamePanel extends JPanel implements Runnable {
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setBackground(Color.black);
         this.setLayout(null);
+
+        // Implement Keylistener
+        this.addKeyListener(new KeyHandler());
+        this.setFocusable(true);
 
         playManager = new PlayManager();
 
@@ -38,7 +42,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        double drawInterval = 10000000 / fps;
+        double drawInterval = 1000000000 / fps;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -59,7 +63,10 @@ public class GamePanel extends JPanel implements Runnable {
      */
     public void update() {
 
-        playManager.update();
+        // only update game if it is not paused
+        if (!KeyHandler.pausePressed) {
+            playManager.update();
+        }
     }
 
     /**

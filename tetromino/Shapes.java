@@ -27,7 +27,7 @@ public enum Shapes {
      * Randomly picks a tetromino shape from an enum
      * of all existing possibilities.
      */
-    public static Shapes pickTetrominoShape(){
+    public static Shapes pickTetrominoShape() {
         return VALUES.get(RANDOM.nextInt(SIZE));
     }
 }

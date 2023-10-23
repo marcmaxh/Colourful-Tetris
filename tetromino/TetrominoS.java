@@ -21,13 +21,13 @@ public class TetrominoS extends Tetromino {
 
             
         b[0].setBlockX(x);
-        b[0].setBlockY(y);;
+        b[0].setBlockY(y);
 
         b[1].setBlockX(x);
-        b[1].setBlockY(y + Block.SIZE);
+        b[1].setBlockY(y - Block.SIZE);
 
         b[2].setBlockX(x + Block.SIZE);
-        b[2].setBlockY(y + Block.SIZE);
+        b[2].setBlockY(y - Block.SIZE);
 
         b[3].setBlockX(x - Block.SIZE);
         b[3].setBlockY(y);
