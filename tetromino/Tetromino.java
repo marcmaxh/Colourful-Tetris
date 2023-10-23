@@ -15,6 +15,9 @@ public abstract class Tetromino {
     boolean leftCollision;
     boolean rightCollision;
     boolean bottomCollision;
+    public boolean active = true;
+    public boolean deactivating;
+    int deactiveCounter = 0;
 
     /**
      * Creates a new tetromino with a set colour.
@@ -61,16 +64,22 @@ public abstract class Tetromino {
                 }
                 break;
             default:
-                rotate(direction);
+                if (!leftCollision && !rightCollision && !bottomCollision) {
+                    for (int i = 0; i < 4; i++) {
+                        b[i].setBlockX(tempB[i].getBlockX());
+                        b[i].setBlockY(tempB[i].getBlockY());
+                    }
+                }
                 break;
         }
     }
 
     // method responsible for the unique rotation of each shape
-    public abstract void rotate(Direction direction);
+    public abstract void rotate();
 
     /**
-     * Checks for collision with the left, right and bottom boundaries of the game board.
+     * Checks for collision with the left, right and bottom boundaries of the game
+     * board.
      * Sets the corresponding collision flags if a collision is detected.
      */
     public void checkMovementCollision() {
@@ -78,9 +87,12 @@ public abstract class Tetromino {
         rightCollision = false;
         bottomCollision = false;
 
+        // check for collision with static blocks
+        checkStaticBlockCollision();
+
         // check for left collision
         for (int i = 0; i < b.length; i++) {
-            if (b[i].getBlockX() <= PlayManager.left_x) {
+            if (b[i].getBlockX() == PlayManager.left_x) {
                 leftCollision = true;
             }
         }
@@ -101,17 +113,83 @@ public abstract class Tetromino {
 
     }
 
+    /**
+     * Checks for collision after rotation of the tetromino.
+     * Sets the leftCollision, rightCollision and bottomCollision flags accordingly.
+     */
     public void checkRotationCollision() {
+        leftCollision = false;
+        rightCollision = false;
+        bottomCollision = false;
 
+        // check for collision with static blocks
+        checkStaticBlockCollision();
+
+        // check for left collision
+        for (int i = 0; i < b.length; i++) {
+            if (tempB[i].getBlockX() < PlayManager.left_x) {
+                leftCollision = true;
+            }
+        }
+
+        // check for right collision
+        for (int i = 0; i < b.length; i++) {
+            if (tempB[i].getBlockX() + Block.SIZE > PlayManager.right_x) {
+                rightCollision = true;
+            }
+        }
+
+        // check for bottom collision
+        for (int i = 0; i < b.length; i++) {
+            if (tempB[i].getBlockY() + Block.SIZE > PlayManager.bottom_y) {
+                bottomCollision = true;
+            }
+        }
     }
 
+    private void checkStaticBlockCollision() {
+
+        // check for collision with static blocks
+        for (int i = 0; i < PlayManager.staticBlocks.size(); i++) {
+
+            // check for bottom collision
+            for (int j = 0; j < b.length; j++) {
+                if (b[j].getBlockX() == (PlayManager.staticBlocks.get(i).getBlockX())
+                        && b[j].getBlockY() + Block.SIZE == (PlayManager.staticBlocks.get(i).getBlockY())) {
+                    bottomCollision = true;
+                }
+            }
+
+            // check for left collision
+            for (int j = 0; j < b.length; j++) {
+                if (b[j].getBlockX() == (PlayManager.staticBlocks.get(i).getBlockX() + Block.SIZE)
+                        && b[j].getBlockY() == (PlayManager.staticBlocks.get(i).getBlockY())) {
+                    leftCollision = true;
+                }
+            }
+
+            // check for right collision
+            for (int j = 0; j < b.length; j++) {
+                if (b[j].getBlockX() == (PlayManager.staticBlocks.get(i).getBlockX() - Block.SIZE)
+                        && b[j].getBlockY() == (PlayManager.staticBlocks.get(i).getBlockY())) {
+                    rightCollision = true;
+                }
+            }
+        }
+    }
 
     /**
-     * Updates the position of the tetromino based on user input and automatic downward movement.
-     * Checks for collisions with the game board and prevents movement if a collision is detected.
+     * Updates the position of the tetromino based on user input and automatic
+     * downward movement.
+     * Checks for collisions with the game board and prevents movement if a
+     * collision is detected.
      * Also handles rotation of the tetromino.
      */
     public void update() {
+
+        if (deactivating) {
+            deactivating();
+        }
 
         checkMovementCollision();
 
@@ -153,17 +231,47 @@ public abstract class Tetromino {
 
         // rotate the tetromino
         if (KeyHandler.rotatePressed) {
-            updateXY(Direction.ROTATE);
+
+            rotate();
 
             KeyHandler.rotatePressed = false;
         }
 
-        autoDropCounter++;
-        if (autoDropCounter == PlayManager.dropInterval && !bottomCollision) {
-            updateXY(Direction.DOWN);
+        // move the tetromino down automatically
 
-            autoDropCounter = 0;
+        if (bottomCollision) {
+            deactivating = true;
+        } else {
+            autoDropCounter++;
+            if (autoDropCounter == PlayManager.dropInterval && !bottomCollision) {
+                updateXY(Direction.DOWN);
+
+                autoDropCounter = 0;
+            }
         }
+
+    }
+
+    private void deactivating() {
+
+        deactiveCounter++;
+
+        // wait for 45 frames before deactivating the tetromino
+        if (deactiveCounter == 45) {
+
+            checkMovementCollision();
+
+            // if the Tetromino is still hitting something afte 45 frames, deactivate it
+            if (bottomCollision) {
+                active = false;
+            }
+
+            // reset the deactivating flag and counter if the tetromino is not hitting
+            // anything anymore (it can keep moving down)
+            deactivating = false;
+            deactiveCounter = 0;
+        }
+
     }
 
     /**
