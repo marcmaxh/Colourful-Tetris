@@ -9,7 +9,7 @@ import main.*;
  */
 public abstract class Tetromino {
 
-    protected Block[] b = new Block[4];
+    public Block[] b = new Block[4];
     protected Block[] tempB = new Block[4];
     int autoDropCounter = 0;
     boolean leftCollision;

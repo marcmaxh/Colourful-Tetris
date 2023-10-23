@@ -34,7 +34,7 @@ public class TetrominoJ extends Tetromino {
     }
 
     @Override
-    public void rotate(Direction direction) {
+    public void rotate() {
         //rotate the tetromino 90 degrees right around the guide block
 
         //if the shape is in its default state
