@@ -6,10 +6,12 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Window;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -31,6 +33,9 @@ public class HomeScreen extends JPanel {
     JButton start = new JButton("START GAME");
     JButton settings = new JButton("SETTINGS");
     JButton quit = new JButton("QUIT");
+
+    //top score
+    JLabel topScoreLabel = new JLabel();
 
     /**
      * Constructor of the HomePanel class.
@@ -55,7 +60,27 @@ public class HomeScreen extends JPanel {
         c.ipadx = 15;
         c.ipady = 10;
         
+        //adding the top score
+        topScoreLabel.setFont(new Font("Monospaced", Font.BOLD, 25));
+        topScoreLabel.setForeground(Color.WHITE);
+        topScoreLabel.setBackground(Color.BLACK);
+        topScoreLabel.setOpaque(true);
+        topScoreLabel.setHorizontalAlignment(0);
+        int topScore;
+        try {
+            BufferedReader savedScore =
+                        new BufferedReader(new FileReader(
+                            new File("main\\save_files\\topScore.txt")));
+            topScore = Integer.parseInt(savedScore.readLine());
+        } catch (Exception e) {
+            topScore = 0;
+            e.printStackTrace();
+        }
+        topScoreLabel.setText("TOP SCORE: " + topScore);
+        this.add(topScoreLabel, c);
+
         //adding the buttons
+        c.gridy = 1;
         start.setFont(new Font("Monospaced", Font.BOLD, 25));
         start.setForeground(Color.WHITE);
         start.setBorder(BorderFactory.createEtchedBorder(10, Color.WHITE, Color.WHITE));
@@ -71,7 +96,7 @@ public class HomeScreen extends JPanel {
             gamePanel.launchGame();
         });
         
-        c.gridy = 1;
+        c.gridy = 2;
         c.ipadx = 45;
         settings.setFont(new Font("Monospaced", Font.BOLD, 25));
         settings.setForeground(Color.WHITE);
@@ -87,7 +112,7 @@ public class HomeScreen extends JPanel {
             window.pack();
         });
 
-        c.gridy = 2;
+        c.gridy = 3;
         c.ipadx = 105;
         quit.setFont(new Font("Monospaced", Font.BOLD, 25));
         quit.setForeground(Color.WHITE);
