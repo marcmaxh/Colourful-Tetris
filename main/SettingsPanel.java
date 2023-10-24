@@ -28,8 +28,8 @@ import javax.swing.SwingUtilities;
  */
 public class SettingsPanel extends JPanel {
     //panel size
-    public static final int WIDTH = 720;
-    public static final int HEIGHT = 750;
+    public static final int WIDTH = 1280;
+    public static final int HEIGHT = 720;
 
     //layout
     GridBagLayout layout = new GridBagLayout();

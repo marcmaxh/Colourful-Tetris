@@ -1,6 +1,9 @@
 package main;
 
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.*;
 import tetromino.*;
 
@@ -28,7 +31,8 @@ public class PlayManager {
     public static ArrayList<Block> staticBlocks = new ArrayList<>();
 
     // Others
-    public static int dropInterval = 60; // 60 frames per second = 1 second
+    public static int dropInterval; //fps
+    File settingsFile = new File("main\\save_files\\settings.txt");
 
     /**
      * Constructor for PlayManager class.
@@ -58,6 +62,28 @@ public class PlayManager {
         // Initialize the next Tetromino
         nexTetromino = pickTetromino();
         nexTetromino.setXY(nextTetrominoStartX, nextTetrominoStartY);
+
+        //Set speed
+        dropInterval = calculateSpeed();
+    }
+
+    /**
+     * Calculates the drop speed of the game
+     * based on the saved settings.
+     */
+    private int calculateSpeed() {
+        int speedSetting;
+        try {
+            BufferedReader savedSettings = new BufferedReader((new FileReader(settingsFile)));
+            speedSetting = Integer.parseInt(savedSettings.readLine());
+            savedSettings.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            speedSetting = 5;
+        }
+
+        //default is 5 for 60 fps
+        return (11 - speedSetting) * 12;
     }
 
     /**

@@ -34,7 +34,21 @@ public class TetrominoO extends Tetromino {
 
     @Override
     public void rotate() {
-        // do nothing since square can't rotate
+        // rotate to adjust for colours for colour mode
+
+        tempB[0].setBlockX(b[2].getBlockX());
+        tempB[0].setBlockY(b[2].getBlockY());;
+
+        tempB[1].setBlockX(b[0].getBlockX());
+        tempB[1].setBlockY(b[0].getBlockY());
+
+        tempB[2].setBlockX(b[3].getBlockX());
+        tempB[2].setBlockY(b[3].getBlockY());
+
+        tempB[3].setBlockX(b[1].getBlockX());
+        tempB[3].setBlockY(b[1].getBlockY());
+
+        updateXY(Direction.ROTATE);
     }
     
 }
