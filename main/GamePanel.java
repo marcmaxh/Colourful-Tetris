@@ -10,7 +10,7 @@ import javax.swing.*;
  */
 public class GamePanel extends JPanel implements Runnable {
     public static final int WIDTH = 1280;
-    public static final int HEIGHT = 750;
+    public static final int HEIGHT = 720;
     final int fps = 60;
     Thread gameThread;
     PlayManager playManager;
@@ -62,6 +62,8 @@ public class GamePanel extends JPanel implements Runnable {
      * Updates through differnt frames of the game.
      */
     public void update() {
+
+        requestFocus(true);
 
         // only update game if it is not paused
         if (!KeyHandler.pausePressed) {

@@ -8,9 +8,8 @@ import main.*;
  * individual tetromino during gameplay.
  */
 public abstract class Tetromino {
-
     public Block[] b = new Block[4];
-    protected Block[] tempB = new Block[4];
+    public Block[] tempB = new Block[4];
     int autoDropCounter = 0;
     boolean leftCollision;
     boolean rightCollision;
@@ -271,7 +270,6 @@ public abstract class Tetromino {
             deactivating = false;
             deactiveCounter = 0;
         }
-
     }
 
     /**
