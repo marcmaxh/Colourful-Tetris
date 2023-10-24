@@ -34,7 +34,6 @@ public abstract class Tetromino {
             Colours blockColour;
             for (int i = 0; i < 4; i++) {
                 blockColour = Colours.pickBlockColour();
-                System.out.println(blockColour);
                 b[i] = new Block(blockColour);
                 tempB[i] = new Block(blockColour);
             }
