@@ -115,8 +115,6 @@ public class TetrominoJ extends Tetromino {
             tempB[3].setBlockY(b[0].getBlockY() + Block.SIZE);
 
         }
-
-
         updateXY(Direction.ROTATE);
     }
 }

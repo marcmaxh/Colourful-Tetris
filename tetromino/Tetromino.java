@@ -270,7 +270,6 @@ public abstract class Tetromino {
             deactivating = false;
             deactiveCounter = 0;
         }
-
     }
 
     /**

@@ -17,7 +17,7 @@ public class TetrominoT extends Tetromino {
         // Shape numbering:
         // Guide block: +
         // * + * b[1], b[0], b[2]
-        // * b[3]
+        //   * b[3]
 
         b[0].setBlockX(x);
         b[0].setBlockY(y);
@@ -34,6 +34,7 @@ public class TetrominoT extends Tetromino {
 
     @Override
     public void rotate() {
+
         // rotate the tetromino 90 degrees right around the guide block
 
         // if the shape is in its default state
@@ -42,9 +43,9 @@ public class TetrominoT extends Tetromino {
             // stage 1
             // Shape numbering:
             // Guide block: +
-            // * b[1]
+            //   * b[1]
             // * + b[3], b[0]
-            // * b[2]
+            //   * b[2]
 
             tempB[0].setBlockX(b[0].getBlockX());
             tempB[0].setBlockY(b[0].getBlockY());
