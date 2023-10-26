@@ -308,8 +308,6 @@ public class PlayManager {
             }
 
             updateRows(removedRows);
-
-            System.out.println(score);
         }
     }
 
