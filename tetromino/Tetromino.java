@@ -205,7 +205,10 @@ public abstract class Tetromino {
         }
     }
 
-    private void checkStaticBlockCollision() {
+    /**
+     * Checks for collision for any of the placed tetrominos.
+     */
+    protected void checkStaticBlockCollision() {
 
         // check for collision with static blocks
         for (int i = 0; i < PlayManager.staticBlocks.size(); i++) {

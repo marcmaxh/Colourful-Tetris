@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Path2D;
 
+import main.PlayManager;
+
 /**
  * Stars are elements that sometimes generate instead of tetrominos.
  * Only appear in colour mode.
@@ -61,6 +63,36 @@ public class Star extends Tetromino {
         }
         path.closePath();
         return path;
+    }
+
+    @Override
+    protected void checkStaticBlockCollision() {
+        // check for collision with static blocks
+        for (int i = 0; i < PlayManager.staticBlocks.size(); i++) {
+
+            Block staticBlock = PlayManager.staticBlocks.get(i);
+
+            // check for bottom collision
+            //when the star lands on a block it changes its colour to its own
+            //and then disappears
+            if (b[0].getBlockX() == (staticBlock.getBlockX())
+                    && b[0].getBlockY() + Block.SIZE == (staticBlock.getBlockY())) {
+                staticBlock.setColor(b[0].getColor());
+                bottomCollision = true;
+            }
+
+            // check for left collision
+            if (b[0].getBlockX() == (staticBlock.getBlockX() + Block.SIZE)
+                    && b[0].getBlockY() == (staticBlock.getBlockY())) {
+                leftCollision = true;
+            }
+
+            // check for right collision
+            if (b[0].getBlockX() == (staticBlock.getBlockX() - Block.SIZE)
+                    && b[0].getBlockY() == (staticBlock.getBlockY())) {
+                rightCollision = true;
+            }
+        }
     }
 
     @Override

@@ -163,10 +163,15 @@ public class PlayManager {
         // (is active)
         if (!currentTetromino.active) {
             // Add the current Tetromino to the static blocks
-            for (int i = 0; i < 4; i++) {
-                staticBlocks.add(currentTetromino.b[i]);
+            //it it is a tetromino
+            if (currentTetromino.b[1] != null) {
+                for (int i = 0; i < 4; i++) {
+                    staticBlocks.add(currentTetromino.b[i]);
+                }
+                findRows(currentTetromino);    
             }
-            findRows(currentTetromino);
+            //if we get a star with only 1 block
+            //remove it
 
             currentTetromino.deactivating = false;
 
