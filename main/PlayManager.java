@@ -229,10 +229,10 @@ public class PlayManager {
         g2d.drawString("NEXT", x + 60, y + 60);
 
         // Draw score frame
-        g2d.drawRect(x, top_y, 250, 300);
+        g2d.drawRect(x, top_y, 300, 300);
         x += 40;
         y = top_y + 90;
-        g2d.drawString("LEVEL: " + level, x, y);
+        g2d.drawString("LEVEL: " + (level - 1), x, y);
         y += 70;
         g2d.drawString("LINES: " + lines, x, y);
         y += 70;
