@@ -3,10 +3,12 @@ package main;
 import java.awt.*;
 import javax.swing.*;
 
+
 /**
- * Class resonsible for management of the game panel -
- * the panel where the actual gameplay is displayed and executed.
- * Is that correct?
+ * The GamePanel class represents the panel where the game is played. 
+ * It extends JPanel and implements Runnable.
+ * It contains the game loop, which updates and repaints the game at a fixed frame rate.
+ * It also contains the PlayManager object, which manages the game logic and drawing.
  */
 public class GamePanel extends JPanel implements Runnable {
     public static final int WIDTH = 1280;
@@ -71,9 +73,11 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+   
     /**
-     * Paints the start of the game?
-     * Change if needed.
+     * This method is responsible for painting the game panel.
+     * It calls the draw method of the playManager to draw the game elements on the panel.
+     * @param g The graphics object used for painting.
      */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
