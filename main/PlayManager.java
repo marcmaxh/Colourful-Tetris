@@ -38,7 +38,7 @@ public class PlayManager {
 
     //Score
     public static int score = 0;
-    public static int level = 0;
+    public static int level = 1;
     public static int lines = 0;
 
     /**
@@ -89,8 +89,16 @@ public class PlayManager {
             speedSetting = 5;
         }
 
+        int speed;
+
+        if (11 - speedSetting + level > 10) {
+            speed = 10;
+        } else {
+            speed = 11 - speedSetting + level;
+        }
+
         //default is 5 for 60 fps
-        return (11 - speedSetting) * 12;
+        return (speed) * 12;
     }
 
     private boolean isNightmare() {
@@ -235,14 +243,14 @@ public class PlayManager {
         g2d.drawString("NEXT", x + 60, y + 60);
 
         // Draw score frame
-        g2d.drawRect(x, top_y, 250, 300);
+        g2d.drawRect(x, top_y, 300, 300);
         x += 40;
         y = top_y + 90;
-        g2d.drawString("LEVEL: ", x, y);
+        g2d.drawString("LEVEL: " + (level - 1), x, y);
         y += 70;
-        g2d.drawString("LINES: ", x, y);
+        g2d.drawString("LINES: " + lines, x, y);
         y += 70;
-        g2d.drawString("SCORE: ", x, y);
+        g2d.drawString("SCORE: " + score, x, y);
 
         // Draw the current Tetromino
         if (currentTetromino != null) {
@@ -292,19 +300,20 @@ public class PlayManager {
             yBlocks = 0;
         }
 
+        // Add score for removed rows
         if (removedRows.size() > 0) {
             //add up score
             if (removedRows.size() == 1) {
-                score += 40 * (level + 1);
+                score += 40 * (level);
             }
             if (removedRows.size() == 2) {
-                score += 100 * (level + 1);
+                score += 100 * (level);
             }
             if (removedRows.size() == 3) {
-                score += 300 * (level + 1);
+                score += 300 * (level);
             }
             if (removedRows.size() == 4) {
-                score += 1200 * (level + 1);
+                score += 1200 * (level);
             }
 
             updateRows(removedRows);
@@ -317,6 +326,14 @@ public class PlayManager {
      * Adjusts for nightmare difficulty.
      */
     private boolean removeRow(int y) {
+
+        // add 1 to lines to display on scoreboard
+        lines++;
+
+        if (lines % 10 == 0) {
+            level++;
+        }
+
         //getting all blocks in the row
         ArrayList<Block> row = new ArrayList<Block>(10);
         for (Block b : staticBlocks) {
