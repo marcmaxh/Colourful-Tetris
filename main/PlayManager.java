@@ -163,10 +163,15 @@ public class PlayManager {
         // (is active)
         if (!currentTetromino.active) {
             // Add the current Tetromino to the static blocks
-            for (int i = 0; i < 4; i++) {
-                staticBlocks.add(currentTetromino.b[i]);
+            //it it is a tetromino
+            if (currentTetromino.b[1] != null) {
+                for (int i = 0; i < 4; i++) {
+                    staticBlocks.add(currentTetromino.b[i]);
+                }
+                findRows(currentTetromino);    
             }
-            findRows(currentTetromino);
+            //if we get a star with only 1 block
+            //remove it
 
             currentTetromino.deactivating = false;
 
@@ -180,10 +185,19 @@ public class PlayManager {
                 Random random = new Random();
                 //1 is for tetromino
                 //2 is for a star
-                int[] elementProbability = {1, 1, 1, 1, 1, 1, 1, 2, 2, 2};
-                int elementCode = elementProbability[random.nextInt(elementProbability.length)];
+                int[] elementProbabilityC = {1, 1, 1, 1, 1, 1, 1, 2, 2, 2};
+                int[] elementProbabilityN = {1, 1, 1, 1, 2, 2, 2, 2, 2, 2};
+
+                int elementCode;
+
+                if (isNightmareDifficulty) {
+                    elementCode = elementProbabilityN[random.nextInt(elementProbabilityN.length)];
+                } else {
+                    elementCode = elementProbabilityC[random.nextInt(elementProbabilityC.length)];
+                }
+
+                // pick a new nextTetromino
                 if (elementCode == 1) {
-                    // pick a new nextTetromino
                     nexTetromino = pickTetromino();
                 } else {
                     nexTetromino = new Star();
@@ -294,8 +308,6 @@ public class PlayManager {
             }
 
             updateRows(removedRows);
-
-            System.out.println(score);
         }
     }
 
@@ -312,6 +324,14 @@ public class PlayManager {
                 row.add(b);
             }
         }
+        
+        //sorting row so that the blocks are read consecutively
+        //relative to how they are placed on the screen
+        Collections.sort(row, new Comparator<Block>() {
+            public int compare(Block b1, Block b2) {
+                return b1.getBlockX() - b2.getBlockX();
+            }
+        });
 
         //manage scores for diffent modes
         boolean fullRow = false;
@@ -335,18 +355,19 @@ public class PlayManager {
             } else {
                 //add bonuses for 3, 6, 10 in a row
 
-                for (Block b : row) {
+                for (int i = 1; i < 12; i++) {
+                    Block b = row.get(i);
                     if (comboColor == b.getColor()) {
                         comboSize++;
                     } else {
                         if (comboSize >= 10) {
-                            score += 500 * level;
+                            score += 500 * (level + 1);
                         } else {
                             if (comboSize >= 6) {
-                                score += 300 * level;
+                                score += 300 * (level + 1);
                             } else {
                                 if (comboSize >= 3) {
-                                    score += 100 * level;
+                                    score += 100 * (level + 1);
                                 }
                             }
                         }
