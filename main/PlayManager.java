@@ -174,10 +174,22 @@ public class PlayManager {
             currentTetromino = nexTetromino;
             currentTetromino.setXY(tetrominoStartX, tetrominoStartY);
 
-            // pick a new nextTetromino
-            nexTetromino = pickTetromino();
-            nexTetromino.setXY(nextTetrominoStartX, nextTetrominoStartY);
-
+            //if the game is in colourful mode
+            //add the possibility of generating stars
+            if (isCoulorfulMode) {
+                Random random = new Random();
+                //1 is for tetromino
+                //2 is for a star
+                int[] elementProbability = {1, 1, 1, 1, 1, 1, 1, 2, 2, 2};
+                int elementCode = elementProbability[random.nextInt(elementProbability.length)];
+                if (elementCode == 1) {
+                    // pick a new nextTetromino
+                    nexTetromino = pickTetromino();
+                } else {
+                    nexTetromino = new Star();
+                }
+                nexTetromino.setXY(nextTetrominoStartX, nextTetrominoStartY);
+            }
         } else {
 
             currentTetromino.update();

@@ -25,6 +25,11 @@ public abstract class Tetromino {
     private boolean colourMode = this.isColourful();
 
     /**
+     * Default constructor.
+     */
+    public Tetromino() {}
+
+    /**
      * Creates a new tetromino with a set colour.
      * Or one with differently-coloured blocks based on
      * if colourful mode is on or not.
@@ -83,24 +88,32 @@ public abstract class Tetromino {
         switch (direction) {
             case DOWN:
                 for (int i = 0; i < 4; i++) {
-                    b[i].setBlockY(b[i].getBlockY() + Block.SIZE);
+                    if (b[i] != null) {
+                        b[i].setBlockY(b[i].getBlockY() + Block.SIZE);
+                    }
                 }
                 break;
             case RIGHTMOVE:
                 for (int i = 0; i < 4; i++) {
-                    b[i].setBlockX(b[i].getBlockX() + Block.SIZE);
+                    if (b[i] != null) {
+                        b[i].setBlockX(b[i].getBlockX() + Block.SIZE);
+                    }
                 }
                 break;
             case LEFTMOVE:
                 for (int i = 0; i < 4; i++) {
-                    b[i].setBlockX(b[i].getBlockX() - Block.SIZE);
+                    if (b[i] != null) {
+                        b[i].setBlockX(b[i].getBlockX() - Block.SIZE);
+                    }
                 }
                 break;
             default:
                 if (!leftCollision && !rightCollision && !bottomCollision) {
                     for (int i = 0; i < 4; i++) {
-                        b[i].setBlockX(tempB[i].getBlockX());
-                        b[i].setBlockY(tempB[i].getBlockY());
+                        if (b[i] != null) {
+                            b[i].setBlockX(tempB[i].getBlockX());
+                            b[i].setBlockY(tempB[i].getBlockY());
+                        }
                     }
                 }
                 break;
@@ -125,22 +138,28 @@ public abstract class Tetromino {
 
         // check for left collision
         for (int i = 0; i < b.length; i++) {
-            if (b[i].getBlockX() == PlayManager.left_x) {
-                leftCollision = true;
+            if (b[i] != null) {
+                if (b[i].getBlockX() == PlayManager.left_x) {
+                    leftCollision = true;
+                }
             }
         }
 
         // check for right collision
         for (int i = 0; i < b.length; i++) {
-            if (b[i].getBlockX() + Block.SIZE == PlayManager.right_x) {
-                rightCollision = true;
+            if (b[i] != null) {
+                if (b[i].getBlockX() + Block.SIZE == PlayManager.right_x) {
+                    rightCollision = true;
+                }
             }
         }
 
         // check for bottom collision
         for (int i = 0; i < b.length; i++) {
-            if (b[i].getBlockY() + Block.SIZE == PlayManager.bottom_y) {
-                bottomCollision = true;
+            if (b[i] != null) {
+                if (b[i].getBlockY() + Block.SIZE == PlayManager.bottom_y) {
+                    bottomCollision = true;
+                }
             }
         }
 
@@ -160,22 +179,28 @@ public abstract class Tetromino {
 
         // check for left collision
         for (int i = 0; i < b.length; i++) {
-            if (tempB[i].getBlockX() < PlayManager.left_x) {
-                leftCollision = true;
+            if (tempB[i] != null) {
+                if (tempB[i].getBlockX() < PlayManager.left_x) {
+                    leftCollision = true;
+                }
             }
         }
 
         // check for right collision
         for (int i = 0; i < b.length; i++) {
-            if (tempB[i].getBlockX() + Block.SIZE > PlayManager.right_x) {
-                rightCollision = true;
+            if (tempB[i] != null) {
+                if (tempB[i].getBlockX() + Block.SIZE > PlayManager.right_x) {
+                    rightCollision = true;
+                }
             }
         }
 
         // check for bottom collision
         for (int i = 0; i < b.length; i++) {
-            if (tempB[i].getBlockY() + Block.SIZE > PlayManager.bottom_y) {
-                bottomCollision = true;
+            if (tempB[i] != null) {
+                if (tempB[i].getBlockY() + Block.SIZE > PlayManager.bottom_y) {
+                    bottomCollision = true;
+                }
             }
         }
     }
@@ -187,24 +212,30 @@ public abstract class Tetromino {
 
             // check for bottom collision
             for (int j = 0; j < b.length; j++) {
-                if (b[j].getBlockX() == (PlayManager.staticBlocks.get(i).getBlockX())
-                        && b[j].getBlockY() + Block.SIZE == (PlayManager.staticBlocks.get(i).getBlockY())) {
+                if (b[j] != null
+                    && b[j].getBlockX() == (PlayManager.staticBlocks.get(i).getBlockX())
+                    && b[j].getBlockY() + Block.SIZE
+                    == (PlayManager.staticBlocks.get(i).getBlockY())) {
                     bottomCollision = true;
                 }
             }
 
             // check for left collision
             for (int j = 0; j < b.length; j++) {
-                if (b[j].getBlockX() == (PlayManager.staticBlocks.get(i).getBlockX() + Block.SIZE)
-                        && b[j].getBlockY() == (PlayManager.staticBlocks.get(i).getBlockY())) {
+                if (b[j] != null
+                    && b[j].getBlockX()
+                    == (PlayManager.staticBlocks.get(i).getBlockX() + Block.SIZE)
+                    && b[j].getBlockY() == (PlayManager.staticBlocks.get(i).getBlockY())) {
                     leftCollision = true;
                 }
             }
 
             // check for right collision
             for (int j = 0; j < b.length; j++) {
-                if (b[j].getBlockX() == (PlayManager.staticBlocks.get(i).getBlockX() - Block.SIZE)
-                        && b[j].getBlockY() == (PlayManager.staticBlocks.get(i).getBlockY())) {
+                if (b[j] != null
+                    && b[j].getBlockX()
+                    == (PlayManager.staticBlocks.get(i).getBlockX() - Block.SIZE)
+                    && b[j].getBlockY() == (PlayManager.staticBlocks.get(i).getBlockY())) {
                     rightCollision = true;
                 }
             }
