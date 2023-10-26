@@ -76,7 +76,15 @@ public class GamePanel extends JPanel implements Runnable {
             playManager.update();
         }
 
-        checkGameOver();
+        if (playManager.gameOver) {
+
+            if (KeyHandler.enterPressed) {
+                playManager.returnHome = true;
+                playManager.reset();
+            }
+        }
+
+        checkReturnHome();
     }
 
 
@@ -84,9 +92,10 @@ public class GamePanel extends JPanel implements Runnable {
      * Checks if the game is over and switches to the HomeScreen if it is.
      * Removes this GamePanel from the top-level window that contains it and adds the HomeScreen.
      */
-    private void checkGameOver() {
+    private void checkReturnHome() {
         // Check if the game is over...
-        if (playManager.gameOver) {
+        if (playManager.returnHome) {
+
             // Get the top-level window that contains this GamePanel
             Window window = SwingUtilities.getWindowAncestor(this);
 
@@ -102,6 +111,7 @@ public class GamePanel extends JPanel implements Runnable {
                 homeScreen.requestFocusInWindow();
             }
         }
+        playManager.returnHome = false;
     }
 
     /**
