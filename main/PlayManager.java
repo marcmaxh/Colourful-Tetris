@@ -4,6 +4,8 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import tetromino.*;
 
@@ -31,15 +33,17 @@ public class PlayManager {
     public static ArrayList<Block> staticBlocks = new ArrayList<>();
 
     // Settings
-    public static int dropInterval; //fps
+    public static int dropInterval; // fps
     File settingsFile = new File("main\\save_files\\settings.txt");
     private boolean isCoulorfulMode = isColourful();
     private boolean isNightmareDifficulty = isNightmare();
 
-    //Score
+    // Score
     public static int score = 0;
     public static int level = 1;
     public static int lines = 0;
+    boolean gameOver;
+    boolean returnHome;
 
     /**
      * Constructor for PlayManager class.
@@ -70,7 +74,7 @@ public class PlayManager {
         nexTetromino = pickTetromino();
         nexTetromino.setXY(nextTetrominoStartX, nextTetrominoStartY);
 
-        //Set speed
+        // Set speed
         dropInterval = calculateSpeed();
     }
 
@@ -97,7 +101,7 @@ public class PlayManager {
             speed = 11 - speedSetting + level;
         }
 
-        //default is 5 for 60 fps
+        // default is 5 for 60 fps
         return (speed) * 12;
     }
 
@@ -176,7 +180,14 @@ public class PlayManager {
                 for (int i = 0; i < 4; i++) {
                     staticBlocks.add(currentTetromino.b[i]);
                 }
-                findRows(currentTetromino);    
+    
+            // check if the game is over
+            if (currentTetromino.b[0].getBlockX() == tetrominoStartX
+                    && currentTetromino.b[0].getBlockY() == tetrominoStartY) {
+                gameOver = true;
+            }
+
+            findRows(currentTetromino);    
             }
             //if we get a star with only 1 block
             //remove it
@@ -187,8 +198,8 @@ public class PlayManager {
             currentTetromino = nexTetromino;
             currentTetromino.setXY(tetrominoStartX, tetrominoStartY);
 
-            //if the game is in colourful mode
-            //add the possibility of generating stars
+            // if the game is in colourful mode
+            // add the possibility of generating stars
             if (isCoulorfulMode) {
                 Random random = new Random();
                 //1 is for tetromino
@@ -214,17 +225,17 @@ public class PlayManager {
                 nexTetromino = pickTetromino();
             }
 
-            //set next tetromino
+            // set next tetromino
             nexTetromino.setXY(nextTetrominoStartX, nextTetrominoStartY);
         } else {
 
             currentTetromino.update();
         }
-
     }
 
     /**
-     * Draws the game.
+     * Draws the inital frame at the start of a new game?
+     * Change if incorrect.
      */
     public void draw(Graphics2D g2d) {
 
@@ -239,7 +250,7 @@ public class PlayManager {
         g2d.drawRect(x, y, 200, 200);
         g2d.setFont(new Font("Monospaced", Font.PLAIN, 30));
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                             RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.drawString("NEXT", x + 60, y + 60);
 
         // Draw score frame
@@ -264,13 +275,16 @@ public class PlayManager {
         for (Block b : staticBlocks) {
             b.draw(g2d);
         }
-        
 
-        // Draw Pause menu
+        // Draw Pause and Game Over messages
 
         g2d.setColor(Color.white);
         g2d.setFont(g2d.getFont().deriveFont(50f));
-        if (KeyHandler.pausePressed) {
+        if (gameOver) {
+            g2d.drawString("GAME OVER", left_x + 30, top_y + 300);
+            g2d.setFont(g2d.getFont().deriveFont(30f));
+            g2d.drawString("Press Enter to go back Home", left_x - 30, top_y + 400);
+        } else if (KeyHandler.pausePressed) {
             g2d.drawString("PAUSED", left_x + 85, top_y + 300);
         }
 
@@ -281,10 +295,10 @@ public class PlayManager {
      * Then removes them and updates what is remaining.
      */
     private void findRows(Tetromino tetromino) {
-        //amount of blocks in a given affected row
+        // amount of blocks in a given affected row
         int yBlocks = 0;
         ArrayList<Integer> removedRows = new ArrayList<Integer>();
-        
+
         for (int i = 0; i < 4; i++) {
             for (Block b : staticBlocks) {
                 if (tetromino.b[i].getBlockY() == b.getBlockY()) {
@@ -293,7 +307,7 @@ public class PlayManager {
             }
             if (yBlocks == 12) {
                 if (tetromino.b[i] != null
-                    && removeRow(tetromino.b[i].getBlockY())) {
+                        && removeRow(tetromino.b[i].getBlockY())) {
                     removedRows.add(tetromino.b[i].getBlockY());
                 }
             }
@@ -302,7 +316,7 @@ public class PlayManager {
 
         // Add score for removed rows
         if (removedRows.size() > 0) {
-            //add up score
+            // add up score
             if (removedRows.size() == 1) {
                 score += 40 * (level);
             }
@@ -334,7 +348,7 @@ public class PlayManager {
             level++;
         }
 
-        //getting all blocks in the row
+        // getting all blocks in the row
         ArrayList<Block> row = new ArrayList<Block>(10);
         for (Block b : staticBlocks) {
             if (b.getBlockY() == y) {
@@ -364,13 +378,13 @@ public class PlayManager {
                 }
                 fullRow = true;
             }
-            //add bonus scores for colour combos
+            // add bonus scores for colour combos
             if (fullRow) {
-                //add big bonus for full row of the same colour
-                //in case we already have the data from nightmare difficulty
+                // add big bonus for full row of the same colour
+                // in case we already have the data from nightmare difficulty
                 score += 800 * level;
             } else {
-                //add bonuses for 3, 6, 10 in a row
+                // add bonuses for 3, 6, 10 in a row
 
                 for (int i = 1; i < 12; i++) {
                     Block b = row.get(i);
@@ -394,7 +408,7 @@ public class PlayManager {
                 }
             }
         }
-        //remove all the blocks in the row
+        // remove all the blocks in the row
         for (Block b : row) {
             staticBlocks.remove(b);
         }
@@ -406,15 +420,48 @@ public class PlayManager {
      * Moves all the remaining rows above the removed ones down.
      */
     private void updateRows(ArrayList<Integer> removedRows) {
-        //sorting by in descending order
+        // sorting by in descending order
         Collections.sort(removedRows);
-        //moving down each block that is above each given removed row
+        // moving down each block that is above each given removed row
         for (int i = 0; i < removedRows.size(); i++) {
             for (Block b : staticBlocks) {
                 if (b.getBlockY() < removedRows.get(i)) {
                     b.setBlockY(b.getBlockY() + Block.SIZE);
                 }
             }
+        }
+    }
+
+    public void reset() {
+        saveScore();
+
+        staticBlocks.clear();
+        score = 0;
+        level = 1;
+        lines = 0;
+        gameOver = false;
+        dropInterval = calculateSpeed();
+
+    }
+
+    private void saveScore() {
+        // read the topScore.txt file
+        try {
+            File scores = new File("main\\save_files\\topScore.txt");
+            BufferedReader savedScore = new BufferedReader(new FileReader(scores));
+            int topScore = Integer.parseInt(savedScore.readLine());
+            savedScore.close();
+
+            // compare score with top score
+            if (score > topScore) {
+                // write score into file
+                FileWriter savingScores = new FileWriter(scores);
+                savingScores.write(score + "\n");
+                savingScores.close();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
