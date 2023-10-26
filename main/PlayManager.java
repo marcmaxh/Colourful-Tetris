@@ -317,6 +317,14 @@ public class PlayManager {
                 row.add(b);
             }
         }
+        
+        //sorting row so that the blocks are read consecutively
+        //relative to how they are placed on the screen
+        Collections.sort(row, new Comparator<Block>() {
+            public int compare(Block b1, Block b2) {
+                return b1.getBlockX() - b2.getBlockX();
+            }
+        });
 
         //manage scores for diffent modes
         boolean fullRow = false;
@@ -340,18 +348,19 @@ public class PlayManager {
             } else {
                 //add bonuses for 3, 6, 10 in a row
 
-                for (Block b : row) {
+                for (int i = 1; i < 12; i++) {
+                    Block b = row.get(i);
                     if (comboColor == b.getColor()) {
                         comboSize++;
                     } else {
                         if (comboSize >= 10) {
-                            score += 500 * level;
+                            score += 500 * (level + 1);
                         } else {
                             if (comboSize >= 6) {
-                                score += 300 * level;
+                                score += 300 * (level + 1);
                             } else {
                                 if (comboSize >= 3) {
-                                    score += 100 * level;
+                                    score += 100 * (level + 1);
                                 }
                             }
                         }
