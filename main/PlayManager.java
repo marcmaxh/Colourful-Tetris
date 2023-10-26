@@ -165,8 +165,8 @@ public class PlayManager {
             // Add the current Tetromino to the static blocks
             for (int i = 0; i < 4; i++) {
                 staticBlocks.add(currentTetromino.b[i]);
-                findRows(currentTetromino);
             }
+            findRows(currentTetromino);
 
             currentTetromino.deactivating = false;
 
@@ -188,8 +188,12 @@ public class PlayManager {
                 } else {
                     nexTetromino = new Star();
                 }
-                nexTetromino.setXY(nextTetrominoStartX, nextTetrominoStartY);
+            } else {
+                nexTetromino = pickTetromino();
             }
+
+            //set next tetromino
+            nexTetromino.setXY(nextTetrominoStartX, nextTetrominoStartY);
         } else {
 
             currentTetromino.update();
@@ -266,7 +270,8 @@ public class PlayManager {
                 }
             }
             if (yBlocks == 12) {
-                if (removeRow(tetromino.b[i].getBlockY())) {
+                if (tetromino.b[i] != null
+                    && removeRow(tetromino.b[i].getBlockY())) {
                     removedRows.add(tetromino.b[i].getBlockY());
                 }
             }
@@ -364,7 +369,7 @@ public class PlayManager {
      */
     private void updateRows(ArrayList<Integer> removedRows) {
         //sorting by in descending order
-        Collections.sort(removedRows, Collections.reverseOrder());
+        Collections.sort(removedRows);
         //moving down each block that is above each given removed row
         for (int i = 0; i < removedRows.size(); i++) {
             for (Block b : staticBlocks) {
