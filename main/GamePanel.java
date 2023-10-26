@@ -15,7 +15,6 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     PlayManager playManager;
 
-
     /**
      * Constructor for the GamePanel class.
      */
@@ -40,6 +39,11 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread.start();
     }
 
+    /**
+     * This method runs the game loop which updates
+     * and repaints the game panel at a fixed frame rate.
+     * The frame rate is determined by the fps variable.
+     */
     @Override
     public void run() {
         double drawInterval = 1000000000 / fps;
@@ -59,21 +63,49 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     /**
-     * Updates through differnt frames of the game.
+     * Updates through different frames of the game.
      */
     public void update() {
 
         requestFocus(true);
 
         // only update game if it is not paused
-        if (!KeyHandler.pausePressed) {
+        if (!KeyHandler.pausePressed && !playManager.gameOver) {
             playManager.update();
+        }
+
+        checkGameOver();
+    }
+
+
+    /**
+     * Checks if the game is over and switches to the HomeScreen if it is.
+     * Removes this GamePanel from the top-level window that contains it and adds the HomeScreen.
+     */
+    private void checkGameOver() {
+        // Check if the game is over...
+        if (playManager.gameOver) {
+            // Get the top-level window that contains this GamePanel
+            Window window = SwingUtilities.getWindowAncestor(this);
+
+            if (window != null) {
+                // Remove this GamePanel from the window
+                window.remove(this);
+    
+                // Switch to the HomeScreen
+                HomeScreen homeScreen = new HomeScreen();
+                window.add(homeScreen);
+                window.pack();
+                window.setLocationRelativeTo(null);
+                homeScreen.requestFocusInWindow();
+            }
         }
     }
 
     /**
-     * Paints the start of the game?
-     * Change if needed.
+     * Overrides the paintComponent method to draw the game panel.
+     * 
+     * @param g the Graphics object to be painted
      */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

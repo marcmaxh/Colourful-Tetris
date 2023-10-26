@@ -33,6 +33,13 @@ public class PlayManager {
     // Others
     public static int dropInterval; //fps
     File settingsFile = new File("main\\save_files\\settings.txt");
+    boolean gameOver;
+
+    // Score
+    int level = 1;
+    int lines;
+    int score;
+
 
     /**
      * Constructor for PlayManager class.
@@ -129,6 +136,12 @@ public class PlayManager {
                 staticBlocks.add(currentTetromino.b[i]);
             }
 
+            // check if the game is over
+            if (currentTetromino.b[0].getBlockX() == tetrominoStartX
+                    && currentTetromino.b[0].getBlockY() == tetrominoStartY) {
+                gameOver = true;
+            }
+
             currentTetromino.deactivating = false;
 
             // replace the currentTetromino with the nextTetromino
@@ -143,12 +156,15 @@ public class PlayManager {
 
             currentTetromino.update();
         }
-
     }
 
+
     /**
-     * Draws the inital frame at the start of a new game?
-     * Change if incorrect.
+     * This method is responsible for drawing the game elements on the screen.
+     * It draws the main play area frame, the next tetromino frame, the score frame,
+     * the current tetromino, the next tetromino, 
+     * the static blocks, and the pause and game over messages.
+     * @param g2d The Graphics2D object used for drawing.
      */
     public void draw(Graphics2D g2d) {
 
@@ -170,11 +186,11 @@ public class PlayManager {
         g2d.drawRect(x, top_y, 250, 300);
         x += 40;
         y = top_y + 90;
-        g2d.drawString("LEVEL: ", x, y);
+        g2d.drawString("LEVEL: " + level, x, y);
         y += 70;
-        g2d.drawString("LINES: ", x, y);
+        g2d.drawString("LINES: " + lines, x, y);
         y += 70;
-        g2d.drawString("SCORE: ", x, y);
+        g2d.drawString("SCORE: " + score, x, y);
 
         // Draw the current Tetromino
         if (currentTetromino != null) {
@@ -187,14 +203,15 @@ public class PlayManager {
         // Draw the static blocks
         for (Block b : staticBlocks) {
             b.draw(g2d);
-        }
-        
+        }    
 
-        // Draw Pause menu
+        // Draw Pause and Game Over messages
 
         g2d.setColor(Color.white);
         g2d.setFont(g2d.getFont().deriveFont(50f));
-        if (KeyHandler.pausePressed) {
+        if (gameOver) {
+            g2d.drawString("GAME OVER", left_x + 30, top_y + 300);
+        } else if (KeyHandler.pausePressed) {
             g2d.drawString("PAUSED", left_x + 85, top_y + 300);
         }
 
