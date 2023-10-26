@@ -70,4 +70,15 @@ public class Block extends Rectangle {
     public void setColor(Color color) {
         this.color = color;
     }
+
+    @Override
+    public boolean equals(Object blockObject) {
+        if (blockObject.getClass() == Block.class) {
+            if (this.x == ((Block) blockObject).getBlockX()
+                && this.y == ((Block) blockObject).getBlockY()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

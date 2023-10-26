@@ -30,9 +30,16 @@ public class PlayManager {
     final int nextTetrominoStartY;
     public static ArrayList<Block> staticBlocks = new ArrayList<>();
 
-    // Others
+    // Settings
     public static int dropInterval; //fps
     File settingsFile = new File("main\\save_files\\settings.txt");
+    private boolean isCoulorfulMode = isColourful();
+    private boolean isNightmareDifficulty = isNightmare();
+
+    //Score
+    public static int score = 0;
+    public static int level = 0;
+    public static int lines = 0;
 
     /**
      * Constructor for PlayManager class.
@@ -86,6 +93,37 @@ public class PlayManager {
         return (11 - speedSetting) * 12;
     }
 
+    private boolean isNightmare() {
+        int setting;
+        try {
+            BufferedReader savedSettings = new BufferedReader((new FileReader(settingsFile)));
+            savedSettings.readLine();
+            savedSettings.readLine();
+            setting = Integer.parseInt(savedSettings.readLine());
+            savedSettings.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            setting = 0;
+        }
+
+        return (setting == 1);
+    }
+
+    private boolean isColourful() {
+        int setting;
+        try {
+            BufferedReader savedSettings = new BufferedReader((new FileReader(settingsFile)));
+            savedSettings.readLine();
+            setting = Integer.parseInt(savedSettings.readLine());
+            savedSettings.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            setting = 0;
+        }
+
+        return (setting == 1);
+    }
+
     /**
      * Picks a random Tetromino shape to be used in the game.
      *
@@ -127,6 +165,7 @@ public class PlayManager {
             // Add the current Tetromino to the static blocks
             for (int i = 0; i < 4; i++) {
                 staticBlocks.add(currentTetromino.b[i]);
+                findRows(currentTetromino);
             }
 
             currentTetromino.deactivating = false;
@@ -135,10 +174,22 @@ public class PlayManager {
             currentTetromino = nexTetromino;
             currentTetromino.setXY(tetrominoStartX, tetrominoStartY);
 
-            // pick a new nextTetromino
-            nexTetromino = pickTetromino();
-            nexTetromino.setXY(nextTetrominoStartX, nextTetrominoStartY);
-
+            //if the game is in colourful mode
+            //add the possibility of generating stars
+            if (isCoulorfulMode) {
+                Random random = new Random();
+                //1 is for tetromino
+                //2 is for a star
+                int[] elementProbability = {1, 1, 1, 1, 1, 1, 1, 2, 2, 2};
+                int elementCode = elementProbability[random.nextInt(elementProbability.length)];
+                if (elementCode == 1) {
+                    // pick a new nextTetromino
+                    nexTetromino = pickTetromino();
+                } else {
+                    nexTetromino = new Star();
+                }
+                nexTetromino.setXY(nextTetrominoStartX, nextTetrominoStartY);
+            }
         } else {
 
             currentTetromino.update();
@@ -147,8 +198,7 @@ public class PlayManager {
     }
 
     /**
-     * Draws the inital frame at the start of a new game?
-     * Change if incorrect.
+     * Draws the game.
      */
     public void draw(Graphics2D g2d) {
 
@@ -198,5 +248,130 @@ public class PlayManager {
             g2d.drawString("PAUSED", left_x + 85, top_y + 300);
         }
 
+    }
+
+    /**
+     * Looks for completed rows.
+     * Then removes them and updates what is remaining.
+     */
+    private void findRows(Tetromino tetromino) {
+        //amount of blocks in a given affected row
+        int yBlocks = 0;
+        ArrayList<Integer> removedRows = new ArrayList<Integer>();
+        
+        for (int i = 0; i < 4; i++) {
+            for (Block b : staticBlocks) {
+                if (tetromino.b[i].getBlockY() == b.getBlockY()) {
+                    yBlocks++;
+                }
+            }
+            if (yBlocks == 12) {
+                if (removeRow(tetromino.b[i].getBlockY())) {
+                    removedRows.add(tetromino.b[i].getBlockY());
+                }
+            }
+            yBlocks = 0;
+        }
+
+        if (removedRows.size() > 0) {
+            //add up score
+            if (removedRows.size() == 1) {
+                score += 40 * (level + 1);
+            }
+            if (removedRows.size() == 2) {
+                score += 100 * (level + 1);
+            }
+            if (removedRows.size() == 3) {
+                score += 300 * (level + 1);
+            }
+            if (removedRows.size() == 4) {
+                score += 1200 * (level + 1);
+            }
+
+            updateRows(removedRows);
+
+            System.out.println(score);
+        }
+    }
+
+    /**
+     * Removes a single given row at a set y level.
+     * Adds bonuses to the score.
+     * Adjusts for nightmare difficulty.
+     */
+    private boolean removeRow(int y) {
+        //getting all blocks in the row
+        ArrayList<Block> row = new ArrayList<Block>(10);
+        for (Block b : staticBlocks) {
+            if (b.getBlockY() == y) {
+                row.add(b);
+            }
+        }
+
+        //manage scores for diffent modes
+        boolean fullRow = false;
+        int comboSize = 1;
+
+        if (isCoulorfulMode) {
+            Color comboColor = row.get(0).getColor();
+            if (isNightmareDifficulty) {
+                for (Block b : row) {
+                    if (comboColor != b.getColor()) {
+                        return false;
+                    }
+                }
+                fullRow = true;
+            }
+            //add bonus scores for colour combos
+            if (fullRow) {
+                //add big bonus for full row of the same colour
+                //in case we already have the data from nightmare difficulty
+                score += 800 * level;
+            } else {
+                //add bonuses for 3, 6, 10 in a row
+
+                for (Block b : row) {
+                    if (comboColor == b.getColor()) {
+                        comboSize++;
+                    } else {
+                        if (comboSize >= 10) {
+                            score += 500 * level;
+                        } else {
+                            if (comboSize >= 6) {
+                                score += 300 * level;
+                            } else {
+                                if (comboSize >= 3) {
+                                    score += 100 * level;
+                                }
+                            }
+                        }
+                        comboSize = 1;
+                        comboColor = b.getColor();
+                    }
+                }
+            }
+        }
+        //remove all the blocks in the row
+        for (Block b : row) {
+            staticBlocks.remove(b);
+        }
+
+        return true;
+    }
+
+    /**
+     * Moves all the remaining rows above the removed ones down.
+     */
+    private void updateRows(ArrayList<Integer> removedRows) {
+        //sorting by in descending order
+        Collections.sort(removedRows, Collections.reverseOrder());
+        //moving down each block that is above each given removed row
+        for (int i = 0; i < removedRows.size(); i++) {
+            for (Block b : staticBlocks) {
+                if (b.getBlockY() < removedRows.get(i)) {
+                    b.setBlockY(b.getBlockY() + Block.SIZE);
+                }
+            }
+        }
     }
 }
