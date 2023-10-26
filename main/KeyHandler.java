@@ -74,6 +74,14 @@ public class KeyHandler implements KeyListener {
             }
         }
 
+        if (code == KeyEvent.VK_ESCAPE) {
+            if (pausePressed) {
+                pausePressed = false;
+            } else {
+                pausePressed = true;
+            }
+        }
+
     }
 
     @Override

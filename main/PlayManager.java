@@ -185,10 +185,19 @@ public class PlayManager {
                 Random random = new Random();
                 //1 is for tetromino
                 //2 is for a star
-                int[] elementProbability = {1, 1, 1, 1, 1, 1, 1, 2, 2, 2};
-                int elementCode = elementProbability[random.nextInt(elementProbability.length)];
+                int[] elementProbabilityC = {1, 1, 1, 1, 1, 1, 1, 2, 2, 2};
+                int[] elementProbabilityN = {1, 1, 1, 1, 2, 2, 2, 2, 2, 2};
+
+                int elementCode;
+
+                if (isNightmareDifficulty) {
+                    elementCode = elementProbabilityN[random.nextInt(elementProbabilityN.length)];
+                } else {
+                    elementCode = elementProbabilityC[random.nextInt(elementProbabilityC.length)];
+                }
+
+                // pick a new nextTetromino
                 if (elementCode == 1) {
-                    // pick a new nextTetromino
                     nexTetromino = pickTetromino();
                 } else {
                     nexTetromino = new Star();
