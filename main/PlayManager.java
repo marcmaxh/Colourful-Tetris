@@ -40,6 +40,8 @@ public class PlayManager {
     public static int score = 0;
     public static int level = 1;
     public static int lines = 0;
+    boolean gameOver;
+
 
     /**
      * Constructor for PlayManager class.
@@ -174,6 +176,13 @@ public class PlayManager {
             for (int i = 0; i < 4; i++) {
                 staticBlocks.add(currentTetromino.b[i]);
             }
+
+            // check if the game is over
+            if (currentTetromino.b[0].getBlockX() == tetrominoStartX
+                    && currentTetromino.b[0].getBlockY() == tetrominoStartY) {
+                gameOver = true;
+            }
+            
             findRows(currentTetromino);
 
             currentTetromino.deactivating = false;
@@ -206,11 +215,12 @@ public class PlayManager {
 
             currentTetromino.update();
         }
-
     }
 
+
     /**
-     * Draws the game.
+     * Draws the inital frame at the start of a new game?
+     * Change if incorrect.
      */
     public void draw(Graphics2D g2d) {
 
@@ -232,7 +242,7 @@ public class PlayManager {
         g2d.drawRect(x, top_y, 300, 300);
         x += 40;
         y = top_y + 90;
-        g2d.drawString("LEVEL: " + (level - 1), x, y);
+        g2d.drawString("LEVEL: ", x, y);
         y += 70;
         g2d.drawString("LINES: " + lines, x, y);
         y += 70;
@@ -249,14 +259,15 @@ public class PlayManager {
         // Draw the static blocks
         for (Block b : staticBlocks) {
             b.draw(g2d);
-        }
-        
+        }    
 
-        // Draw Pause menu
+        // Draw Pause and Game Over messages
 
         g2d.setColor(Color.white);
         g2d.setFont(g2d.getFont().deriveFont(50f));
-        if (KeyHandler.pausePressed) {
+        if (gameOver) {
+            g2d.drawString("GAME OVER", left_x + 30, top_y + 300);
+        } else if (KeyHandler.pausePressed) {
             g2d.drawString("PAUSED", left_x + 85, top_y + 300);
         }
 
