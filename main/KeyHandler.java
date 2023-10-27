@@ -76,6 +76,8 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_ENTER) {
             enterPressed = true;
+        } else {
+            enterPressed = false;
         }
 
         if (code == KeyEvent.VK_ESCAPE) {

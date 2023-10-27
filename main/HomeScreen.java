@@ -127,6 +127,7 @@ public class HomeScreen extends JPanel {
         quit.addActionListener((l) -> {
             //close the program
             SwingUtilities.getWindowAncestor(this).dispose();     
+            System.exit(0);
         });
     }
     

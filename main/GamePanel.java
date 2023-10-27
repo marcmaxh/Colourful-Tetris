@@ -37,6 +37,11 @@ public class GamePanel extends JPanel implements Runnable {
      * Launches a new game of Tetris.
      */
     public void launchGame() {
+
+        playManager.reset();
+        playManager = new PlayManager();
+
+        // Start the game loop
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -71,7 +76,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         requestFocus(true);
 
-        // only update game if it is not paused
+        // only update game if it is not paused or over
         if (!KeyHandler.pausePressed && !playManager.gameOver) {
             playManager.update();
         }
@@ -80,7 +85,6 @@ public class GamePanel extends JPanel implements Runnable {
 
             if (KeyHandler.enterPressed) {
                 playManager.returnHome = true;
-                playManager.reset();
             }
         }
 
@@ -107,11 +111,10 @@ public class GamePanel extends JPanel implements Runnable {
                 HomeScreen homeScreen = new HomeScreen();
                 window.add(homeScreen);
                 window.pack();
-                window.setLocationRelativeTo(null);
                 homeScreen.requestFocusInWindow();
             }
+            playManager.returnHome = false;
         }
-        playManager.returnHome = false;
     }
 
     /**

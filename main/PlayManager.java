@@ -41,7 +41,7 @@ public class PlayManager {
     // Score
     public static int score = 0;
     public static int level = 1;
-    public static int lines = 9;
+    public static int lines = 0;
     boolean gameOver;
     boolean returnHome;
 
@@ -176,22 +176,22 @@ public class PlayManager {
         // (is active)
         if (!currentTetromino.active) {
             // Add the current Tetromino to the static blocks
-            //it it is a tetromino
+            // it it is a tetromino
             if (currentTetromino.b[1] != null) {
                 for (int i = 0; i < 4; i++) {
                     staticBlocks.add(currentTetromino.b[i]);
                 }
-    
-            // check if the game is over
-            if (currentTetromino.b[0].getBlockX() == tetrominoStartX
-                    && currentTetromino.b[0].getBlockY() == tetrominoStartY) {
-                gameOver = true;
-            }
 
-            findRows(currentTetromino);    
+                // check if the game is over
+                if (currentTetromino.b[0].getBlockX() == tetrominoStartX
+                        && currentTetromino.b[0].getBlockY() == tetrominoStartY) {
+                    gameOver = true;
+                }
+
+                findRows(currentTetromino);
             }
-            //if we get a star with only 1 block
-            //remove it
+            // if we get a star with only 1 block
+            // remove it
 
             currentTetromino.deactivating = false;
 
@@ -203,10 +203,10 @@ public class PlayManager {
             // add the possibility of generating stars
             if (isCoulorfulMode) {
                 Random random = new Random();
-                //1 is for tetromino
-                //2 is for a star
-                int[] elementProbabilityC = {1, 1, 1, 1, 1, 1, 1, 2, 2, 2};
-                int[] elementProbabilityN = {1, 1, 1, 1, 2, 2, 2, 2, 2, 2};
+                // 1 is for tetromino
+                // 2 is for a star
+                int[] elementProbabilityC = { 1, 1, 1, 1, 1, 1, 1, 2, 2, 2 };
+                int[] elementProbabilityN = { 1, 1, 1, 1, 2, 2, 2, 2, 2, 2 };
 
                 int elementCode;
 
@@ -362,16 +362,16 @@ public class PlayManager {
                 row.add(b);
             }
         }
-        
-        //sorting row so that the blocks are read consecutively
-        //relative to how they are placed on the screen
+
+        // sorting row so that the blocks are read consecutively
+        // relative to how they are placed on the screen
         Collections.sort(row, new Comparator<Block>() {
             public int compare(Block b1, Block b2) {
                 return b1.getBlockX() - b2.getBlockX();
             }
         });
 
-        //manage scores for diffent modes
+        // manage scores for diffent modes
         boolean fullRow = false;
         int comboSize = 1;
 
@@ -442,12 +442,20 @@ public class PlayManager {
     public void reset() {
         saveScore();
 
+        currentTetromino = null;
+
         staticBlocks.clear();
         score = 0;
         level = 1;
         lines = 0;
         gameOver = false;
-        dropInterval = calculateSpeed();
+
+        // Initialize the next Tetromino
+        nexTetromino = pickTetromino();
+        nexTetromino.setXY(nextTetrominoStartX, nextTetrominoStartY);
+
+        // Set speed
+        //dropInterval = calculateSpeed();
 
     }
 
