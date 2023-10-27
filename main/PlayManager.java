@@ -41,7 +41,7 @@ public class PlayManager {
     // Score
     public static int score = 0;
     public static int level = 1;
-    public static int lines = 0;
+    public static int lines = 9;
     boolean gameOver;
     boolean returnHome;
 
@@ -93,12 +93,13 @@ public class PlayManager {
             speedSetting = 5;
         }
 
-        int speed;
+        int speed; // lower is faster
 
-        if (11 - speedSetting + level > 10) {
-            speed = 10;
+        // 10 is the minimum speed (lower is faster)
+        if (speedSetting + level > 10) {
+            speed = 1;
         } else {
-            speed = 11 - speedSetting + level;
+            speed = 11 - (speedSetting + (level - 1));
         }
 
         // default is 5 for 60 fps
@@ -231,6 +232,12 @@ public class PlayManager {
 
             currentTetromino.update();
         }
+
+        // if the level has increased, update the drop speed
+        if (dropInterval != calculateSpeed()) {
+            dropInterval = calculateSpeed();
+        }
+
     }
 
     /**
