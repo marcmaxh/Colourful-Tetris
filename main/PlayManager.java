@@ -471,7 +471,7 @@ public class PlayManager {
             if (score > topScore) {
                 // write score into file
                 FileWriter savingScores = new FileWriter(scores);
-                savingScores.write(score + "\n");
+                savingScores.write(score);
                 savingScores.close();
             }
 
