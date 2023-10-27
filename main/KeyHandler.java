@@ -16,6 +16,7 @@ public class KeyHandler implements KeyListener {
     public static boolean leftPressed;
     public static boolean rightPressed;
     public static boolean pausePressed;
+    public static boolean enterPressed;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -67,6 +68,19 @@ public class KeyHandler implements KeyListener {
         }
 
         if (code == KeyEvent.VK_P) {
+            if (pausePressed) {
+                pausePressed = false;
+            } else {
+                pausePressed = true;
+            }
+        }
+        if (code == KeyEvent.VK_ENTER) {
+            enterPressed = true;
+        } else {
+            enterPressed = false;
+        }
+
+        if (code == KeyEvent.VK_ESCAPE) {
             if (pausePressed) {
                 pausePressed = false;
             } else {

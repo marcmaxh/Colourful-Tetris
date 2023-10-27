@@ -17,6 +17,28 @@ public class Block extends Rectangle {
     }
 
     /**
+     * Constructor for a block with a randomised colour.
+     */
+    public Block(Colours color) {
+        switch (color) {
+            case R:
+                this.color = Color.RED;
+                break;
+            case G:
+                this.color = Color.GREEN;
+                break;
+            case B:
+                this.color = Color.BLUE;
+                break;
+            case Y:
+                this.color = Color.YELLOW;
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
      * Draws the block on the game display.
      */
     public void draw(Graphics2D g2d) {
@@ -47,5 +69,16 @@ public class Block extends Rectangle {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    @Override
+    public boolean equals(Object blockObject) {
+        if (blockObject.getClass() == Block.class) {
+            if (this.x == ((Block) blockObject).getBlockX()
+                && this.y == ((Block) blockObject).getBlockY()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

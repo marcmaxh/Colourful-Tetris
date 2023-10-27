@@ -35,47 +35,90 @@ public class TetrominoZ extends Tetromino {
 
     @Override
     public void rotate() {
-        //if the tetromino is vertical, make it horizontal
-        //and vice versa
+        //full roation implementation for colour mode
+
+        //if the shape is vertical
         if (b[0].getBlockX() != b[2].getBlockX()) {
 
-            // Shape numbering:
-            // Guide block: +
-            // * *    b[1], b[2]
-            //   + *  b[0], b[3]
+            //from 3 rotations
+            if (b[0].getBlockX() > b[2].getBlockX()) {
+                //return to default orientation
+                tempB[0].setBlockX(b[0].getBlockX());
+                tempB[0].setBlockY(b[0].getBlockY());
 
-            tempB[0].setBlockX(b[0].getBlockX());
-            tempB[0].setBlockY(b[0].getBlockY());
+                tempB[1].setBlockX(b[0].getBlockX() - Block.SIZE);
+                tempB[1].setBlockY(b[0].getBlockY() - Block.SIZE);
 
-            tempB[1].setBlockX(b[0].getBlockX() - Block.SIZE);
-            tempB[1].setBlockY(b[0].getBlockY() - Block.SIZE);
+                tempB[2].setBlockX(b[0].getBlockX());
+                tempB[2].setBlockY(b[0].getBlockY() - Block.SIZE);
 
-            tempB[2].setBlockX(b[0].getBlockX());
-            tempB[2].setBlockY(b[0].getBlockY() - Block.SIZE);
+                tempB[3].setBlockX(b[0].getBlockX() + Block.SIZE);
+                tempB[3].setBlockY(b[0].getBlockY());
 
-            tempB[3].setBlockX(b[0].getBlockX() + Block.SIZE);
-            tempB[3].setBlockY(b[0].getBlockY());
+            } else {
+                //or 1 rotation
+
+                // Shape numbering:
+                // Guide block: +
+                // * +    b[3], b[0]
+                //   * *  b[2], b[1]
+                
+                tempB[0].setBlockX(b[0].getBlockX());
+                tempB[0].setBlockY(b[0].getBlockY());
+
+                tempB[1].setBlockX(b[0].getBlockX() + Block.SIZE);
+                tempB[1].setBlockY(b[0].getBlockY() + Block.SIZE);
+
+                tempB[2].setBlockX(b[0].getBlockX());
+                tempB[2].setBlockY(b[0].getBlockY() + Block.SIZE);
+
+                tempB[3].setBlockX(b[0].getBlockX() - Block.SIZE);
+                tempB[3].setBlockY(b[0].getBlockY());
+            }
 
         } else {
+            //or horizontal
 
-            //Shape numbering:
-            //Guide block: +
-            //   *  b[1]
-            // + *  b[0], b[2]
-            // *    b[3]
+            //in default orientation
+            if (b[0].getBlockX() < b[3].getBlockX()) {
+                //Shape numbering:
+                //Guide block: +
+                //   *  b[1]
+                // + *  b[0], b[2]
+                // *    b[3]
 
-            tempB[0].setBlockX(b[0].getBlockX());
-            tempB[0].setBlockY(b[0].getBlockY());
+                tempB[0].setBlockX(b[0].getBlockX());
+                tempB[0].setBlockY(b[0].getBlockY());
 
-            tempB[1].setBlockX(b[0].getBlockX() + Block.SIZE);
-            tempB[1].setBlockY(b[0].getBlockY() - Block.SIZE);
+                tempB[1].setBlockX(b[0].getBlockX() + Block.SIZE);
+                tempB[1].setBlockY(b[0].getBlockY() - Block.SIZE);
 
-            tempB[2].setBlockX(b[0].getBlockX() + Block.SIZE);
-            tempB[2].setBlockY(b[0].getBlockY());
+                tempB[2].setBlockX(b[0].getBlockX() + Block.SIZE);
+                tempB[2].setBlockY(b[0].getBlockY());
 
-            tempB[3].setBlockX(b[0].getBlockX());
-            tempB[3].setBlockY(b[0].getBlockY() + Block.SIZE);
+                tempB[3].setBlockX(b[0].getBlockX());
+                tempB[3].setBlockY(b[0].getBlockY() + Block.SIZE);
+            } else {
+                //or after 2 rotations
 
+                //Shape numbering:
+                //Guide block: +
+                //   *  b[3]
+                // * +  b[2], b[0]
+                // *    b[1]
+
+                tempB[0].setBlockX(b[0].getBlockX());
+                tempB[0].setBlockY(b[0].getBlockY());
+
+                tempB[1].setBlockX(b[0].getBlockX() - Block.SIZE);
+                tempB[1].setBlockY(b[0].getBlockY() + Block.SIZE);
+
+                tempB[2].setBlockX(b[0].getBlockX() - Block.SIZE);
+                tempB[2].setBlockY(b[0].getBlockY());
+
+                tempB[3].setBlockX(b[0].getBlockX());
+                tempB[3].setBlockY(b[0].getBlockY() - Block.SIZE);
+            }
             
         }
 
