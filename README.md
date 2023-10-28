@@ -3,6 +3,14 @@ Tetris with an extra game mode - colourful
 
 The well-known Tetris game in a simple and quick-to-play format.
 
+Controls:
+
+During the game, the tetrominoes are controlled by the arrow keys or wasd.
+Up: rotate the tetromino 90 degrees clockwise
+Right: shifts the tetromino one square to the right
+Left: shifts the tetromino one square to the left
+Down: shifts the tetromino one square downwards ( to speed up dropping )
+The game can be paused by either the space bar or the 'p' key.
 
 Settings:
 
