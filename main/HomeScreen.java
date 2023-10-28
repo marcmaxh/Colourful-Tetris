@@ -73,8 +73,13 @@ public class HomeScreen extends JPanel {
                             new File("main\\save_files\\topScore.txt")));
             topScore = Integer.parseInt(savedScore.readLine());
         } catch (Exception e) {
+            File topScoreFile = new File("main\\save_files\\topScore.txt");
+            try {
+                topScoreFile.createNewFile();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
             topScore = 0;
-            e.printStackTrace();
         }
         topScoreLabel.setText("TOP SCORE: " + topScore);
         this.add(topScoreLabel, c);
@@ -122,6 +127,7 @@ public class HomeScreen extends JPanel {
         quit.addActionListener((l) -> {
             //close the program
             SwingUtilities.getWindowAncestor(this).dispose();     
+            System.exit(0);
         });
     }
     

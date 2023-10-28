@@ -3,10 +3,12 @@ package main;
 import java.awt.*;
 import javax.swing.*;
 
+
 /**
- * Class resonsible for management of the game panel -
- * the panel where the actual gameplay is displayed and executed.
- * Is that correct?
+ * The GamePanel class represents the panel where the game is played. 
+ * It extends JPanel and implements Runnable.
+ * It contains the game loop, which updates and repaints the game at a fixed frame rate.
+ * It also contains the PlayManager object, which manages the game logic and drawing.
  */
 public class GamePanel extends JPanel implements Runnable {
     public static final int WIDTH = 1280;
@@ -14,7 +16,6 @@ public class GamePanel extends JPanel implements Runnable {
     final int fps = 60;
     Thread gameThread;
     PlayManager playManager;
-
 
     /**
      * Constructor for the GamePanel class.
@@ -36,10 +37,20 @@ public class GamePanel extends JPanel implements Runnable {
      * Launches a new game of Tetris.
      */
     public void launchGame() {
+
+        playManager.reset();
+        playManager = new PlayManager();
+
+        // Start the game loop
         gameThread = new Thread(this);
         gameThread.start();
     }
 
+    /**
+     * This method runs the game loop which updates
+     * and repaints the game panel at a fixed frame rate.
+     * The frame rate is determined by the fps variable.
+     */
     @Override
     public void run() {
         double drawInterval = 1000000000 / fps;
@@ -59,21 +70,57 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     /**
-     * Updates through differnt frames of the game.
+     * Updates through different frames of the game.
      */
     public void update() {
 
         requestFocus(true);
 
-        // only update game if it is not paused
-        if (!KeyHandler.pausePressed) {
+        // only update game if it is not paused or over
+        if (!KeyHandler.pausePressed && !playManager.gameOver) {
             playManager.update();
+        }
+
+        if (playManager.gameOver) {
+
+            if (KeyHandler.enterPressed) {
+                playManager.returnHome = true;
+            }
+        }
+
+        checkReturnHome();
+    }
+
+
+    /**
+     * Checks if the game is over and switches to the HomeScreen if it is.
+     * Removes this GamePanel from the top-level window that contains it and adds the HomeScreen.
+     */
+    private void checkReturnHome() {
+        // Check if the game is over...
+        if (playManager.returnHome) {
+
+            // Get the top-level window that contains this GamePanel
+            Window window = SwingUtilities.getWindowAncestor(this);
+
+            if (window != null) {
+                // Remove this GamePanel from the window
+                window.remove(this);
+    
+                // Switch to the HomeScreen
+                HomeScreen homeScreen = new HomeScreen();
+                window.add(homeScreen);
+                window.pack();
+                homeScreen.requestFocusInWindow();
+            }
+            playManager.returnHome = false;
         }
     }
 
     /**
-     * Paints the start of the game?
-     * Change if needed.
+     * Overrides the paintComponent method to draw the game panel.
+     * 
+     * @param g the Graphics object to be painted
      */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
